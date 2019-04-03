@@ -68,6 +68,9 @@ Pushing button B will let you cicle through each spreadfactor. By pushig button 
 #### SET 
 #### (Settings)
 
+
+## ToDo
+Finish this README
   
 
 [M5Stack]: https://github.com/m5stack/M5Stack
