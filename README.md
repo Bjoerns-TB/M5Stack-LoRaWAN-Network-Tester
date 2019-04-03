@@ -7,3 +7,7 @@ Parts used:
 - M5Stack GPS Module
 - M5Stack LoRaWAN Module
 
+ToDo:
+- Documentation
+- Documentation
+- Documentation
