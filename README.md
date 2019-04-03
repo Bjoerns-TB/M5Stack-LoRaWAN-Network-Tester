@@ -55,7 +55,7 @@ Pushing button B will let you cicle through each spreadfactor. By pushig button 
 #### LCM (LinkCheckMode)
 "LCM" is a mode that will trigger a LinkCheckRequest. The TTN backend will report back the number of gateways which received the request. Pushing button B will let you cicle through each spreadfactor.
 
-![LCM Image](https://raw.githubusercontent.com/ "Fig 4. LCM")
+![LCM Image](https://raw.githubusercontent.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/lcm.jpg "Fig 4. LCM")
 
 #### SSV (SiteSurvey)
 "SSV" 
