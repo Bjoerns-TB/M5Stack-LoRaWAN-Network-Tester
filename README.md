@@ -82,6 +82,6 @@ Finish this README
 [TinyGPSPlus]: https://github.com/mikalhart/TinyGPSPlus
 [NeoPixelBus]: https://github.com/Makuna/NeoPixelBus
 [M5_UI]: https://github.com/dsiberia9s/M5_UI
-[geojson.io] http://geojson.io/
+[geojson.io]: http://geojson.io/
 
 
