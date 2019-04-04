@@ -77,8 +77,9 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 
 ![SET Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/set.jpg "Fig 7. SET")
 
-The DutyCycle check ist activated except for the SSV mode.
-If you have a valid GPS fix the GPS track will be written to the SD card as a GPX file.
+## Notes
+  - The DutyCycle check ist activated except for the SSV mode.
+  - If you have a valid GPS fix the GPS track will be written to the SD card as a GPX file.
 
 ## ToDo
   - improve botton reaction 
