@@ -43,27 +43,32 @@ You can move between menu items by pushing the button A.
 
 ![NACK Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/nack.jpg "Fig 2. NACK")
 
-Pushing button B will let you cicle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
+Pushing button B will let you cycle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
 
 #### ACK 
 #### (Acknowladge)
-"ACK" will perform the same test as NACK but it will request an ACK for every transmission. The RSSI and SNR values of the received packet will be shown on the display Pushing button B will let you cicle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
+"ACK" will perform the same test as NACK but it will request an ACK for every transmission. The RSSI and SNR values of the received packet will be shown on the display Pushing button B will let you cycle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
 
 ![ACK Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ack.jpg "Fig 3. ACK")
 
 #### MAN 
 #### (Manual)
-"MAN" will send a LoRaWAN packet with ACK by pushing button C. Pushing button B will let you cicle through each spreadfactor.
+"MAN" will send a LoRaWAN packet with ACK by pushing button C. Pushing button B will let you cycle through each spreadfactor.
+
+![MAN Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/man.jpg "Fig 4. MAN")
 
 #### LCM 
 #### (LinkCheckMode)
-"LCM" is a mode that will trigger a LinkCheckRequest. The TTN backend will report back the number of gateways which received the request. Pushing button B will let you cicle through each spreadfactor. The request is triggered by button C.
+"LCM" is a mode that will trigger a LinkCheckRequest. The TTN backend will report back the number of gateways which received the request. Pushing button B will let you cycle through each spreadfactor. The request is triggered by button C.
 
-![LCM Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/lcm.jpg "Fig 4. LCM")
+![LCM Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/lcm.jpg "Fig 5. LCM")
 
 #### SSV 
 #### (SiteSurvey)
-"SSV" 
+"SSV" is supposed as mode for testing a location. During SSV mode the DutyCycle check will be disabled an the Node will send a LinkCheckRequest for every spreadfactor from SF7 to SF12. After the test the node will show you on which datarates a ACK was received back. The data is also stored on the SD card in GeoJSON format an could be analyzed with [geojson.io]
+
+![SSV Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ssv-2.jpg "Fig 6. SSV running")
+![SSV Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ssv-2.jpg "Fig 7. SSV results")
 
 #### SET 
 #### (Settings)
@@ -77,5 +82,6 @@ Finish this README
 [TinyGPSPlus]: https://github.com/mikalhart/TinyGPSPlus
 [NeoPixelBus]: https://github.com/Makuna/NeoPixelBus
 [M5_UI]: https://github.com/dsiberia9s/M5_UI
+[geojson.io] http://geojson.io/
 
 
