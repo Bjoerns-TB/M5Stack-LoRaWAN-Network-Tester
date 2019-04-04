@@ -19,7 +19,7 @@ This is designed to work with the following hardware:
  
 #### Installation and Configuration
 Upload this sketch to your M5 using the Arduino IDE. M5Stack Fire users have to disable PSRAM, because it will interfer with UART2.
-UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp
+UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp The UART Port on the LoRaWAN module has to changed (solderpads) to use this ports.
 
 ## Instructions for Use
 
@@ -73,10 +73,18 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 #### SET 
 #### (Settings)
 
+"SET" allows to change the transmission intervall in NACH or ACK mode. Possible settings are 15/30/45/60/120 seconds. Pressing button C will active the powersaving mode. The node will go to light sleep and wakes up every 15 seconds. Sleep mode can only be stopped by resetting the devicde (ToDo).
+
+![SET Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/set.jpg "Fig 7. SET")
 
 ## ToDo
-Finish this README
+  - improve botton reaction 
+  - cleanup the code
+  - improve powersave features
+  - Add OTAA 
+  - inform about DutyCycle restriction on display
   
+
 
 [M5Stack]: https://github.com/m5stack/M5Stack
 [TinyGPSPlus]: https://github.com/mikalhart/TinyGPSPlus
