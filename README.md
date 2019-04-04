@@ -35,7 +35,7 @@ On boot you will be presented with the "Boot-Logo" followed by the first working
  
 You can move between menu items by pushing the button A. 
 
-![Menu Image](https://raw.githubusercontent.com/ "Fig 1. Menu")
+![Menu Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/menu.jpg "Fig 1. Menu")
   
 #### NACK 
 #### (No Acknowladge)
