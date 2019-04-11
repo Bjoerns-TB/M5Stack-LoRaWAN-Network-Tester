@@ -5,9 +5,10 @@
 #include "LoRaWan.h"
 
 //Image
-#define imgName logo320240
-#define PicArray extern unsigned char
-PicArray imgName[];
+//#define imgName logo320240
+//#define PicArray extern unsigned char
+//PicArray imgName[];
+extern const unsigned char gImage_logoM5[];
 
 //NeoPixel
 const uint16_t PixelCount = 10;
@@ -583,7 +584,8 @@ void setup() {
   strip.Show();
   strip.SetBrightness(50);
   M5.Lcd.setBrightness(50);
-  M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)imgName);
+  //M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)imgName);
+  M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)gImage_logoM5);
   initlora();
 
   /* Prepare UI */
