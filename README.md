@@ -82,8 +82,8 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   - If you have a valid GPS fix the GPS track will be written to the SD card as a GPX file.
 
 ## ToDo
-~~  - improve botton reaction ~~
-~~  - cleanup the code~~
+  ~~- improve botton reaction~~
+  ~~- cleanup the code~~
   - improve powersave features
   - Add OTAA 
   - inform about DutyCycle restriction on display
