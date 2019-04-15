@@ -4,10 +4,10 @@
 #include <M5_UI.h>					//  https://github.com/dsiberia9s/M5_UI
 #include "LoRaWan.h"
 
+//Task
+TaskHandle_t TaskGPS;
+
 //Image
-//#define imgName logo320240
-//#define PicArray extern unsigned char
-//PicArray imgName[];
 extern const unsigned char gImage_logoM5[];
 
 //NeoPixel
@@ -27,6 +27,7 @@ static const uint32_t GPSBaud = 9600;
 TinyGPSPlus gps;
 HardwareSerial serialgps(2);
 float latitude, longitude, hdop, alt, hdop2;
+int sats;
 
 //LoRa
 int isf = 0;
@@ -160,14 +161,24 @@ bool isChargeFull() {
 }
 
 //Update GPS data from GPS Chip
-static void smartDelay(unsigned long ms)
+static void smartDelay(void * pcParameters)
 {
-  unsigned long start = millis();
+  while (true) {
+    unsigned long start = millis();
+    do
+    {
+      while (serialgps.available())
+        gps.encode(serialgps.read());
+    } while (millis() - start < 1000);
+  }
+}
+
+//Delay without delay
+static void smartDelay2(unsigned long ms)
+{
+  unsigned long start2 = millis();
   do
-  {
-    while (serialgps.available())
-      gps.encode(serialgps.read());
-  } while (millis() - start < ms);
+  {} while (millis() - start2 < ms);
 }
 
 //Write GPS-Data into variables
@@ -186,7 +197,7 @@ void gpsdata() {
 
 //Initialize GPX-Track to SD-Card
 void gpxinit() {
-  if (cardin == true && sdwrite == false && gps.location.isValid() == true) {
+  if (cardin == true && gps.location.isValid() == true) {
     sdwrite = true;
     sprintf(filename1, "/%02d-%02d-%02d", day, month, year - 2000);
     sprintf(filepath, "/%02d-%02d-%02d/%02d-%02d%s", day, month, year - 2000,  hour, minute, ".GPX");
@@ -208,7 +219,7 @@ void gpxinit() {
 
 //Write data to GPX-File
 void writegpx() {
-  if (sdwrite == true && gps.location.isValid() == true) {
+  if (gps.location.isValid() == true) {
     gpsdata();
     sprintf(date1, "%4d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, hour, minute, second);
     dataFile = SD.open(filepath, FILE_WRITE);
@@ -327,7 +338,7 @@ void sendobject() {
   sentMillis = millis();
 
   if (iwm == 0 && gps.location.isValid() == true) {
-    result = lora.transferPacket(coords, sizeof(coords), 5);
+    result = lora.transferPacket(coords, sizeof(coords), 2);
 
     UISet(&UIInputbox_awnh87, "Sending");
 
@@ -340,7 +351,7 @@ void sendobject() {
     }
   } else if (((iwm == 1) && gps.location.isValid() == true) || (iwm == 2)) {
     UISet(&UIInputbox_awnh87, "ACK");
-    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
+    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 2);
 
     if (result == true) {
       cnt++;
@@ -588,6 +599,15 @@ void setup() {
   M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)gImage_logoM5);
   initlora();
 
+  xTaskCreatePinnedToCore(
+    smartDelay,
+    "TaskGPS",
+    10000,
+    NULL,
+    0,
+    &TaskGPS,
+    1);
+
   /* Prepare UI */
   UIBegin();
   LayerFunction_default(0);
@@ -599,12 +619,21 @@ void setup() {
     cardin = true;
   }
 
-  smartDelay(1000);
+  //Prepare UI for iwm = 0
+  UISet(&UITextbox_vimqus, sf[isf]);
+  UIDisable(true, &UIProgressbar_eymzer);
+  UIDisable(true, &UITextbox_859t1hi);
+  UIDisable(true, &UITextbox_olwwlae);
+  UIDisable(true, &UIInputbox_6nssds);
+  UIDisable(true, &UITextbox_7mnuudb);
+  UIDisable(false, &UIInputbox_awnh87);
+
   Serial.println("Started");
 }
 
 void loop() {
 
+  //update button status
   if (M5.BtnA.wasPressed()) {
     if (iwm == 5) {
       iwm = 0;
@@ -613,6 +642,31 @@ void loop() {
     else {
       iwm++;
       UISet(&UITextbox_eq79hh46, workmode[iwm]);
+    }
+
+    if (iwm == 0) {
+      UISet(&UITextbox_vimqus, sf[isf]);
+      UIDisable(false, &UIInputbox_awnh87);
+      UISet(&UITextbox_67ofwdh, "Dim");
+    } else if (iwm == 1) {
+      UIDisable(false, &UIProgressbar_eymzer);
+      UIDisable(false, &UITextbox_859t1hi);
+      UIDisable(false, &UITextbox_olwwlae);
+      UIDisable(false, &UITextbox_7mnuudb);
+      UISet(&UITextbox_67ofwdh, "Send");
+    } else if (iwm == 3) {
+      UIDisable(false, &UIInputbox_6nssds);
+    } else if (iwm == 4) {
+      UIDisable(true, &UIProgressbar_eymzer);
+      UIDisable(true, &UITextbox_859t1hi);
+      UIDisable(true, &UITextbox_olwwlae);
+      UIDisable(true, &UIInputbox_6nssds);
+      UIDisable(true, &UITextbox_7mnuudb);
+    } else if (iwm == 5) {
+      UISet(&UITextbox_vimqus, ttext[iiv]);
+      UIDisable(true, &UIInputbox_awnh87);
+      UISet(&UITextbox_67ofwdh, "PS");
+      strip.SetPixelColor(7, off);
     }
   }
 
@@ -656,7 +710,8 @@ void loop() {
     }
   }
 
-  int sats = gps.satellites.value();
+  //Print satellites and change NeoPixel 4
+  sats = gps.satellites.value();
   UISet(&UITextbox_4t0l0bn, sats);
 
   if (gps.satellites.value() < 3) {
@@ -669,6 +724,7 @@ void loop() {
     strip.SetPixelColor(4, green);
   }
 
+  //Print HDOP and change NeoPixel 0
   hdop = gps.hdop.value();
   hdop2 = hdop / 100.0;
   String stringhdop = String(hdop2);
@@ -684,6 +740,7 @@ void loop() {
     strip.SetPixelColor(0, red);
   }
 
+  //Print GPS fix status und change NeoPixel 2
   if (gps.location.isValid() == false) {
     strip.SetPixelColor(2, red);
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_25_24);
@@ -701,59 +758,7 @@ void loop() {
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_20_24);
   }
 
-  if (iwm > 1 && iwm < 5) {
-    UISet(&UITextbox_67ofwdh, "Send");
-  } else if (iwm == 5 && powersave == false) {
-    UISet(&UITextbox_67ofwdh, "Normal");
-  } else if (iwm == 5 && powersave == true) {
-    UISet(&UITextbox_67ofwdh, "PSave");
-  } else {
-    UISet(&UITextbox_67ofwdh, "Dim");
-  }
-
-  if (iwm == 0) {
-    UISet(&UITextbox_vimqus, sf[isf]);
-    UIDisable(true, &UIProgressbar_eymzer);
-    UIDisable(true, &UITextbox_859t1hi);
-    UIDisable(true, &UITextbox_olwwlae);
-    UIDisable(true, &UIInputbox_6nssds);
-    UIDisable(true, &UITextbox_7mnuudb);
-    UIDisable(false, &UIInputbox_awnh87);
-    strip.SetPixelColor(7, off);
-  } else if (iwm == 3) {
-    UISet(&UITextbox_vimqus, sf[isf]);
-    UIDisable(false, &UIProgressbar_eymzer);
-    UIDisable(false, &UITextbox_859t1hi);
-    UIDisable(false, &UITextbox_olwwlae);
-    UIDisable(false, &UIInputbox_6nssds);
-    UIDisable(false, &UITextbox_7mnuudb);
-    UIDisable(false, &UIInputbox_awnh87);
-  } else if (iwm == 4) {
-    UISet(&UITextbox_vimqus, sf[isf]);
-    UIDisable(true, &UIProgressbar_eymzer);
-    UIDisable(true, &UITextbox_859t1hi);
-    UIDisable(true, &UITextbox_olwwlae);
-    UIDisable(true, &UIInputbox_6nssds);
-    UIDisable(true, &UITextbox_7mnuudb);
-    UIDisable(false, &UIInputbox_awnh87);
-  } else if (iwm == 5) {
-    UISet(&UITextbox_vimqus, ttext[iiv]);
-    UIDisable(true, &UIProgressbar_eymzer);
-    UIDisable(true, &UITextbox_859t1hi);
-    UIDisable(true, &UITextbox_olwwlae);
-    UIDisable(true, &UIInputbox_6nssds);
-    UIDisable(true, &UITextbox_7mnuudb);
-    UIDisable(true, &UIInputbox_awnh87);
-  } else {
-    UISet(&UITextbox_vimqus, sf[isf]);
-    UIDisable(false, &UIProgressbar_eymzer);
-    UIDisable(false, &UITextbox_859t1hi);
-    UIDisable(false, &UITextbox_olwwlae);
-    UIDisable(true, &UIInputbox_6nssds);
-    UIDisable(false, &UITextbox_7mnuudb);
-    UIDisable(false, &UIInputbox_awnh87);
-  }
-
+  //Battery Status
   if (isCharging() == true) {
     M5.Lcd.drawBitmap(240, 5, 24, 24, (uint16_t *)ICON_40_24);
   }
@@ -770,24 +775,34 @@ void loop() {
 
   strip.Show();
 
+  //Update GPS Data
   gpsdata();
 
-  gpxinit();
+  //Init of SD Card for GPX-file
+  if (sdwrite == false) {
+    gpxinit();
+  }
 
-  writegpx();
+  //Write GPS-Track
+  if (sdwrite == true) {
+    writegpx();
+  }
 
+  //Sending intervall
   currentMillis = millis();
   if ((currentMillis - sentMillis > interval[iiv]) && iwm < 2) {
     sendobject();
   }
 
+  //light sleep timer
   if (powersave == true) {
     strip.SetBrightness(0);
     esp_sleep_enable_timer_wakeup(15000000);
     esp_light_sleep_start();
   }
 
-  smartDelay(1000);
+  //used to deflicker the display, more possible, but with less reactive buttons
+  smartDelay2(200);
 
   M5.update();
 }
