@@ -30,10 +30,6 @@
 
 #include "LoRaWan.h"
 
-HardwareSerial SerialLoRa(1);
-//HardwareSerial SerialLoRa(2);
-
-
 LoRaWanClass::LoRaWanClass(void)
 {
     memset(_buffer, 0, 256);
