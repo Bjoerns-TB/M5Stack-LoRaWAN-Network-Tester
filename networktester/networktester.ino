@@ -2,7 +2,7 @@
 #include <TinyGPS++.h>				//  https://github.com/mikalhart/TinyGPSPlus
 #include <NeoPixelBrightnessBus.h>	//  https://github.com/Makuna/NeoPixelBus
 #include <M5_UI.h>					//  https://github.com/dsiberia9s/M5_UI
-#include "LoRaWan.h"
+#include <LoRaWan.h>
 
 //Task
 TaskHandle_t TaskGPS;
