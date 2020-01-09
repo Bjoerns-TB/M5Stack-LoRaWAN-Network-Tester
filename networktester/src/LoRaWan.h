@@ -35,7 +35,7 @@
 #include <Arduino.h>
 
 #define SerialUSB   Serial
-#define SerialLoRa  Serial2
+#define SerialLoRa  Serial1
 
 #define _DEBUG_SERIAL_      1
 #define DEFAULT_TIMEOUT     5 // second
