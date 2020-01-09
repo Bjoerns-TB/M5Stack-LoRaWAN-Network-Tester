@@ -21,6 +21,8 @@ This is designed to work with the following hardware:
 Upload this sketch to your M5 using the Arduino IDE. M5Stack Fire users have to disable PSRAM, because it will interfer with UART2.
 UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp The UART Port on the LoRaWAN module has to changed (solderpads) to use this ports.
 
+Replace the original files LoraWan.h and LoRaWan.cpp delivered by the M5Stack Library under M5Stack/src with the ones in the src directory.
+
 ## Instructions for Use
 
 #### Menu
