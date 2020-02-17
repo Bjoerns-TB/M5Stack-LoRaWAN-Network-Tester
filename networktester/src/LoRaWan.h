@@ -299,7 +299,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setDeciveMode(_device_mode_t mode);
+        void setDeviceMode(_device_mode_t mode);
         
         /**
          *  \brief Set device join a network
@@ -345,7 +345,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setReceiceWindowFirst(unsigned char channel, float frequency);
+        void setReceiveWindowFirst(unsigned char channel, float frequency);
         
         /**
          *  \brief Set receice window 2 channel mapping
@@ -355,7 +355,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setReceiceWindowSecond(float frequency, _data_rate_t dataRate);
+        void setReceiveWindowSecond(float frequency, _data_rate_t dataRate);
         
         /**
          *  \brief Set receice window 2 channel mapping
@@ -366,7 +366,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setReceiceWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth);
+        void setReceiveWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth);
         
         /**
          *  \brief ON/OFF duty cycle limitation
@@ -394,7 +394,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setReceiceWindowDelay(_window_delay_t command, unsigned short _delay);
+        void setReceiveWindowDelay(_window_delay_t command, unsigned short _delay);
         
         /**
          *  \brief Set LoRaWAN class type
