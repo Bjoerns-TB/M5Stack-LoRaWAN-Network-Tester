@@ -467,7 +467,7 @@ void LoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
     delay(DEFAULT_TIMEWAIT);    
 }
 
-void LoRaWanClass::setReceiceWindowFirst(bool command)
+void LoRaWanClass::setReceiveWindowFirst(bool command)
 {
     if(command)sendCommand("AT+RXWIN1=ON\r\n");
     else sendCommand("AT+RXWIN1=OFF\r\n");
@@ -477,7 +477,7 @@ void LoRaWanClass::setReceiceWindowFirst(bool command)
     delay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiceWindowFirst(unsigned char channel, float frequency)
+void LoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
 {
     char cmd[32];
     
@@ -490,7 +490,7 @@ void LoRaWanClass::setReceiceWindowFirst(unsigned char channel, float frequency)
     delay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiceWindowSecond(float frequency, _data_rate_t dataRate)
+void LoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate)
 {
     char cmd[32];
     
@@ -503,7 +503,7 @@ void LoRaWanClass::setReceiceWindowSecond(float frequency, _data_rate_t dataRate
     delay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiceWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth)
+void LoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth)
 {
     char cmd[32];
     
@@ -536,7 +536,7 @@ void LoRaWanClass::setJoinDutyCycle(bool command)
     delay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setReceiceWindowDelay(_window_delay_t command, unsigned short _delay)
+void LoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short _delay)
 {
     char cmd[32];
     
@@ -562,7 +562,7 @@ void LoRaWanClass::setClassType(_class_type_t type)
     delay(DEFAULT_TIMEWAIT);
 }
 
-void LoRaWanClass::setDeciveMode(_device_mode_t mode)
+void LoRaWanClass::setDeviceMode(_device_mode_t mode)
 {
     if(mode == LWABP)sendCommand("AT+MODE=LWABP\r\n");
     else if(mode == LWOTAA)sendCommand("AT+MODE=LWOTAA\r\n");
