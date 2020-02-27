@@ -114,52 +114,6 @@ void LayerFunction_default(String* rootVar) {
   UILayer("default");
 }
 
-//M5Stack functions for battery management
-int8_t getBatteryLevel()
-{
-  Wire.beginTransmission(117);
-  Wire.write(0x78);
-  if (Wire.endTransmission(false) == 0
-      && Wire.requestFrom(117, 1)) {
-    switch (Wire.read() & 0xF0) {
-      case 0xE0: return 25;
-      case 0xC0: return 50;
-      case 0x80: return 75;
-      case 0x00: return 100;
-      default: return 0;
-    }
-  }
-  return -1;
-}
-
-bool isCharging() {
-  uint8_t data;
-  Wire.beginTransmission(117);
-  Wire.write(0x70);
-  Wire.endTransmission(false);
-  if (Wire.requestFrom(117, 1))
-  {
-    data = Wire.read();
-    if (data & (1 << FULL)) return true;
-    else return false;
-  }
-  return false;
-}
-
-bool isChargeFull() {
-  uint8_t data;
-  Wire.beginTransmission(117);
-  Wire.write(0x71);
-  Wire.endTransmission(false);
-  if (Wire.requestFrom(117, 1))
-  {
-    data = Wire.read();
-    if (data & (1 << FULL)) return true;
-    else return false;
-  }
-  return false;
-}
-
 //Update GPS data from GPS Chip
 static void smartDelay(void * pcParameters)
 {
@@ -589,6 +543,7 @@ void writessv() {
 void setup() {
   /* Prepare M5STACK */
   M5.begin();
+  M5.Power.begin();
   Wire.begin();
   serialgps.begin(9600, SERIAL_8N1, 16, 17);
   strip.Begin();
@@ -760,15 +715,15 @@ void loop() {
   }
 
   //Battery Status
-  if (isCharging() == true) {
+  if (M5.Power.isCharging() == true) {
     M5.Lcd.drawBitmap(240, 5, 24, 24, (uint16_t *)ICON_40_24);
   }
 
-  if (isChargeFull() == true) {
+  if (M5.Power.isChargeFull() == true) {
     UISet(&UITextbox_403ohip, "Full");
   }
   else {
-    BattLevel = getBatteryLevel();
+    BattLevel = M5.Power.getBatteryLevel();
     String strbattlevel = String(BattLevel);
     strbattlevel = String(strbattlevel + "%");
     UISet(&UITextbox_403ohip, strbattlevel);
