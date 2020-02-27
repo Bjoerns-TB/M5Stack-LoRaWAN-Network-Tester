@@ -653,6 +653,7 @@ void loop() {
       UIDisable(false, &UITextbox_859t1hi);
       UIDisable(false, &UITextbox_olwwlae);
       UIDisable(false, &UITextbox_7mnuudb);
+    } else if (iwm == 2) {
       UISet(&UITextbox_67ofwdh, "Send");
     } else if (iwm == 3) {
       UIDisable(false, &UIInputbox_6nssds);
