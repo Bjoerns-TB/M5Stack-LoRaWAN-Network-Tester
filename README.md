@@ -75,7 +75,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 #### SET 
 #### (Settings)
 
-"SET" allows to change the transmission intervall in NACH or ACK mode. Possible settings are 15/30/45/60/120 seconds. Pressing button C will active the powersaving mode. The node will go to light sleep and wakes up every 15 seconds. Sleep mode can only be stopped by resetting the devicde (ToDo).
+"SET" allows to change the transmission intervall in NACK or ACK mode. Possible settings are 15/30/45/60/120 seconds. Pressing button C will active the powersaving mode. The node will go to light sleep and wakes up every 15 seconds. Sleep mode can only be stopped by resetting the devicde (ToDo).
 
 ![SET Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/set.jpg "Fig 7. SET")
 
