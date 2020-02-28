@@ -336,7 +336,7 @@ class LoRaWanClass
          *  
          *  \return Return null
          */
-        void setReceiceWindowFirst(bool command);
+        void setReceiveWindowFirst(bool command);
         /**
          *  \brief Set receice window 1 channel mapping
          *  
