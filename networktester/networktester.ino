@@ -288,9 +288,9 @@ void sendobject() {
   sentMillis = millis();
 
   if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
-    result = lora.transferPacket(coords, sizeof(coords), 4);
-
+    
     UISet(&UIInputbox_awnh87, "Sending");
+    result = lora.transferPacket(coords, sizeof(coords), 4);
 
     if (result == true) {
       cnt++;
