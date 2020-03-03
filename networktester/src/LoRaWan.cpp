@@ -30,6 +30,13 @@
 
 #include "LoRaWan.h"
 
+static void smartDelay(unsigned long ms) {
+   unsigned long start = millis();
+   do
+   {} while (millis() - start < ms);
+}
+
+
 LoRaWanClass::LoRaWanClass(void)
 {
     memset(_buffer, 0, 256);
@@ -70,7 +77,7 @@ void LoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
         memset(cmd, 0, 64);
         sprintf(cmd, "AT+ID=DevAddr,\"%s\"\r\n", DevAddr);
         sendCommand(cmd);
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
     
     if(DevEUI)
@@ -78,7 +85,7 @@ void LoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
         memset(cmd, 0, 64);
         sprintf(cmd, "AT+ID=DevEui,\"%s\"\r\n", DevEUI);
         sendCommand(cmd);
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
     
     if(AppEUI)
@@ -86,7 +93,7 @@ void LoRaWanClass::setId(char *DevAddr, char *DevEUI, char *AppEUI)
         memset(cmd, 0, 64);
         sprintf(cmd, "AT+ID=AppEui,\"%s\"\r\n", AppEUI);
         sendCommand(cmd);
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
 }
 
@@ -102,7 +109,7 @@ void LoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
 #if _DEBUG_SERIAL_
         loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
 
     if(AppSKey)
@@ -113,7 +120,7 @@ void LoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
 #if _DEBUG_SERIAL_
         loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
 
     if(AppKey)
@@ -124,7 +131,7 @@ void LoRaWanClass::setKey(char *NwkSKey, char *AppSKey, char *AppKey)
 #if _DEBUG_SERIAL_
         loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-        delay(DEFAULT_TIMEWAIT);
+        smartDelay(DEFAULT_TIMEWAIT);
     }
 }
 
@@ -147,7 +154,7 @@ void LoRaWanClass::setDataRate(_data_rate_t dataRate, _physical_type_t physicalT
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
     
     memset(cmd, 0, 32);
     sprintf(cmd, "AT+DR=%d\r\n", dataRate);
@@ -155,7 +162,7 @@ void LoRaWanClass::setDataRate(_data_rate_t dataRate, _physical_type_t physicalT
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
  
 void LoRaWanClass::setPower(short power)
@@ -168,7 +175,7 @@ void LoRaWanClass::setPower(short power)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setPort(int port)
@@ -181,7 +188,7 @@ void LoRaWanClass::setPort(int port)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setAdaptiveDataRate(bool command)
@@ -191,7 +198,7 @@ void LoRaWanClass::setAdaptiveDataRate(bool command)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setChannel(unsigned char channel, float frequency)
@@ -204,7 +211,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRata)
@@ -217,7 +224,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate_t dataRataMin, _data_rate_t dataRataMax)
@@ -230,7 +237,7 @@ void LoRaWanClass::setChannel(unsigned char channel, float frequency, _data_rate
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 bool LoRaWanClass::transferPacket(char *buffer, unsigned char timeout)
@@ -448,7 +455,7 @@ void LoRaWanClass::setUnconfirmedMessageRepeatTime(unsigned char time)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
@@ -464,7 +471,7 @@ void LoRaWanClass::setConfirmedMessageRetryTime(unsigned char time)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);    
+    smartDelay(DEFAULT_TIMEWAIT);    
 }
 
 void LoRaWanClass::setReceiveWindowFirst(bool command)
@@ -474,7 +481,7 @@ void LoRaWanClass::setReceiveWindowFirst(bool command)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
@@ -487,7 +494,7 @@ void LoRaWanClass::setReceiveWindowFirst(unsigned char channel, float frequency)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate)
@@ -500,7 +507,7 @@ void LoRaWanClass::setReceiveWindowSecond(float frequency, _data_rate_t dataRate
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth)
@@ -513,7 +520,7 @@ void LoRaWanClass::setReceiveWindowSecond(float frequency, _spreading_factor_t s
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setDutyCycle(bool command)
@@ -523,7 +530,7 @@ void LoRaWanClass::setDutyCycle(bool command)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setJoinDutyCycle(bool command)
@@ -533,7 +540,7 @@ void LoRaWanClass::setJoinDutyCycle(bool command)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short _delay)
@@ -549,7 +556,7 @@ void LoRaWanClass::setReceiveWindowDelay(_window_delay_t command, unsigned short
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setClassType(_class_type_t type)
@@ -559,7 +566,7 @@ void LoRaWanClass::setClassType(_class_type_t type)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setDeviceMode(_device_mode_t mode)
@@ -569,7 +576,7 @@ void LoRaWanClass::setDeviceMode(_device_mode_t mode)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 bool LoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
@@ -582,7 +589,7 @@ bool LoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
     
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
@@ -604,7 +611,7 @@ void LoRaWanClass::setDeviceLowPower(void)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setDeviceReset(void)
@@ -613,7 +620,7 @@ void LoRaWanClass::setDeviceReset(void)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::setDeviceDefault(void)
@@ -622,7 +629,7 @@ void LoRaWanClass::setDeviceDefault(void)
 #if _DEBUG_SERIAL_
     loraDebugPrint(DEFAULT_DEBUGTIME);
 #endif
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 void LoRaWanClass::initP2PMode(unsigned short frequency, _spreading_factor_t spreadingFactor, _band_width_t bandwidth, 
@@ -632,11 +639,11 @@ void LoRaWanClass::initP2PMode(unsigned short frequency, _spreading_factor_t spr
     sprintf(cmd, "AT+TEST=RFCFG,%d,%d,%d,%d,%d,%d\r\n", frequency, spreadingFactor, bandwidth, txPreamble, rxPreamble, power);
     
     sendCommand("AT+MODE=TEST\r\n");
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
     sendCommand(cmd);
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
     sendCommand("AT+TEST=RXLRPKT\r\n");
-    delay(DEFAULT_TIMEWAIT);
+    smartDelay(DEFAULT_TIMEWAIT);
 }
 
 bool LoRaWanClass::transferPacketP2PMode(char *buffer, unsigned char timeout)
