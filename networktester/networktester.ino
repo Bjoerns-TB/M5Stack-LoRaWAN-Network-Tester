@@ -115,24 +115,20 @@ void LayerFunction_default(String* rootVar) {
 }
 
 //Update GPS data from GPS Chip
-static void smartDelay(void * pcParameters)
+static void gpsupdate(void * pcParameters)
 {
   while (true) {
-    unsigned long start = millis();
-    do
-    {
       while (serialgps.available())
         gps.encode(serialgps.read());
-    } while (millis() - start < 1000);
   }
 }
 
 //Delay without delay
-static void smartDelay2(unsigned long ms)
+static void smartDelay(unsigned long ms)
 {
-  unsigned long start2 = millis();
+  unsigned long start = millis();
   do
-  {} while (millis() - start2 < ms);
+  {} while (millis() - start < ms);
 }
 
 //Write GPS-Data into variables
@@ -291,7 +287,7 @@ void sendobject() {
 
   sentMillis = millis();
 
-  if (iwm == 0 && gps.location.isValid() == true) {
+  if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
     result = lora.transferPacket(coords, sizeof(coords), 4);
 
     UISet(&UIInputbox_awnh87, "Sending");
@@ -303,7 +299,7 @@ void sendobject() {
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
-  } else if (((iwm == 1) && gps.location.isValid() == true) || (iwm == 2)) {
+  } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
     UISet(&UIInputbox_awnh87, "ACK");
     result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 4);
 
@@ -555,11 +551,11 @@ void setup() {
   initlora();
 
   xTaskCreatePinnedToCore(
-    smartDelay,
+    gpsupdate,
     "TaskGPS",
     10000,
     NULL,
-    0,
+    1,
     &TaskGPS,
     1);
 
@@ -666,6 +662,9 @@ void loop() {
     }
   }
 
+  //Update GPS Data
+  gpsdata();
+  
   //Print satellites and change NeoPixel 4
   sats = gps.satellites.value();
   UISet(&UITextbox_4t0l0bn, sats);
@@ -731,9 +730,6 @@ void loop() {
 
   strip.Show();
 
-  //Update GPS Data
-  gpsdata();
-
   //Init of SD Card for GPX-file
   if (sdwrite == false) {
     gpxinit();
@@ -758,7 +754,7 @@ void loop() {
   }
 
   //used to deflicker the display, more possible, but with less reactive buttons
-  smartDelay2(200);
+  smartDelay(200);
 
   M5.update();
 }
