@@ -3,6 +3,8 @@
 #include <NeoPixelBrightnessBus.h>	//  https://github.com/Makuna/NeoPixelBus
 #include <M5_UI.h>					//  https://github.com/dsiberia9s/M5_UI
 #include <LoRaWan.h>
+#include "soc/timer_group_struct.h"
+#include "soc/timer_group_reg.h"
 
 //Task
 TaskHandle_t TaskGPS;
@@ -123,7 +125,9 @@ static void gpsupdate(void * pcParameters)
         gps.encode(serialgps.read());
       }
     } while (millis() - start < 1000);
-    vTaskDelay(10);
+    TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;
+    TIMERG0.wdt_feed = 1;
+    TIMERG0.wdt_wprotect = 0;
   }
 }
 
