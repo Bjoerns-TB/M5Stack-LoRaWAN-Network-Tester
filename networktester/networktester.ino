@@ -114,12 +114,16 @@ void LayerFunction_default(String* rootVar) {
   UILayer("default");
 }
 
-//Update GPS data from GPS Chip
 static void gpsupdate(void * pcParameters)
 {
-  while (true) {
-      while (serialgps.available())
+  for (;;) {
+    unsigned long start = millis();
+    do {
+      while (serialgps.available()) {
         gps.encode(serialgps.read());
+      }
+    } while (millis() - start < 1000);
+    vTaskDelay(10);
   }
 }
 
@@ -557,7 +561,7 @@ void setup() {
     NULL,
     1,
     &TaskGPS,
-    1);
+    0);
 
   /* Prepare UI */
   UIBegin();
