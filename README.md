@@ -97,7 +97,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   - ~~improve botton reaction~~
   - ~~cleanup the code~~
   - improve powersave features
-  - Add OTAA 
+  - ~~Add OTAA~~ 
   - inform about DutyCycle restriction on display
 
 [M5Stack]: https://github.com/m5stack/M5Stack
