@@ -37,7 +37,7 @@ int oldisf = 0;
 char *dr[6] = {"DR5", "DR4", "DR3", "DR2", "DR1", "DR0"};
 char *sf[6] = {"SF7", "SF8", "SF9", "SF10", "SF11", "SF12"};
 int iwm = 0;
-char *workmode[6] = {"NACK", "ACK", "MAN", "LCM", "SSV", "SET"};
+char *workmode[6] = {"NACK", "ACK", "MAN", "LCM", "SSV", "OTAA", "SET"};
 char buffer[256];
 short length;
 short rssi;
@@ -52,6 +52,8 @@ long interval[5] = {15000, 30000, 45000, 60000, 120000};
 char *ttext[5] = {"15s", "30s", "45s", "60s", "120s"};
 int cnt = 0;
 String txcnt;
+int otaa = 0;
+int otaaack = 0;
 
 //Battery
 int8_t BattLevel = 0;
@@ -220,8 +222,11 @@ void initlora() {
 
   // void setId(char *DevAddr, char *DevEUI, char *AppEUI);
   lora.setId("yourdeviceaddress", NULL, NULL);
+  //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI");
+  
   // setKey(char *NwkSKey, char *AppSKey, char *AppKey);
   lora.setKey("yourNetworkSKey", "yourappSKey", NULL);
+  //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);
 
   lora.setDeviceMode(LWABP);
   lora.setDataRate(DR5, EU868);
@@ -241,6 +246,25 @@ void initlora() {
   lora.setPower(14);
   lora.setPort(1);
   lora.setAdaptiveDataRate(false);
+}
+
+//Settings for LoRaWAN ABP
+void initloraabp() {
+  lora.setDeviceMode(LWABP);
+  lora.setAdaptiveDataRate(false);
+  otaa = 0;
+  cnt = 0;
+}
+
+//Settings for LoRaWAN OTAA
+void initloraotaa() {
+  lora.setDeviceMode(LWOTAA);
+  lora.setAdaptiveDataRate(true);
+  UISet(&UIInputbox_awnh87, "Joining");
+  while (!lora.setOTAAJoin(JOIN, 10));
+  UISet(&UIInputbox_awnh87, "Joined");
+  otaa = 1;
+  cnt = 0;
 }
 
 //Send data using LoRaWAN
@@ -376,6 +400,67 @@ void sendobject() {
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
+  }
+}
+
+void sendobjectotaa() {
+
+  Serial.println("Sending OTAA");
+
+  bool result = false;
+
+  int32_t lat = latitude * 10000;
+  int32_t lon = longitude * 10000;
+  int16_t altitude = alt * 100;
+  int8_t hdopGPS = hdop / 10;
+
+  coords[0] = lat;
+  coords[1] = lat >> 8;
+  coords[2] = lat >> 16;
+
+  coords[3] = lon;
+  coords[4] = lon >> 8;
+  coords[5] = lon >> 16;
+
+  coords[6] = altitude;
+  coords[7] = altitude >> 8;
+
+  coords[8] = hdopGPS;
+
+  sentMillis = millis();
+
+  Serial.println(gps.location.age());
+
+  UISet(&UIInputbox_awnh87, "Sending");
+	
+  if (otaaack == 0) {
+  result = lora.transferPacket(coords, sizeof(coords), 4);
+  } else if (otaaack == 1) {
+  result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 4);
+  }
+
+  if (result == true) {
+    cnt++;
+    txcnt = String("Sent " + String(cnt));
+    UISet(&UIInputbox_awnh87, txcnt);
+
+    short length;
+    short rssi;
+    float snr;
+    char charsnr[5];
+    short gwcnt;
+
+    memset(buffer, 0, 256);
+    length = lora.receivePacket(buffer, 256, &rssi, &snr, &gwcnt);
+
+    dtostrf(snr, 5, 1, charsnr);
+    if (rssi >= -200) {
+      UISet(&UIProgressbar_eymzer, rssi + 130);
+      UISet(&UITextbox_859t1hi, rssi);
+      UISet(&UITextbox_olwwlae, charsnr);
+    }
+  } else {
+    UISet(&UIInputbox_awnh87, "Error");
   }
 }
 
@@ -594,10 +679,12 @@ void loop() {
 
   //update button status
   if (M5.BtnA.wasPressed()) {
-    if (iwm == 5) {
+    if (iwm == 6) {
       iwm = 0;
       UISet(&UITextbox_eq79hh46, workmode[iwm]);
-    }
+      if (otaa == 1) {
+        initloraabp();
+      }
     else {
       iwm++;
       UISet(&UITextbox_eq79hh46, workmode[iwm]);
@@ -623,8 +710,17 @@ void loop() {
       UIDisable(true, &UIInputbox_6nssds);
       UIDisable(true, &UITextbox_7mnuudb);
     } else if (iwm == 5) {
+      UISet(&UITextbox_vimqus, "Join");
+      UISet(&UITextbox_67ofwdh, "NACK");
+      UIDisable(false, &UIProgressbar_eymzer);
+      UIDisable(false, &UITextbox_859t1hi);
+      UIDisable(false, &UITextbox_olwwlae);
+    } else if (iwm == 6) {
       UISet(&UITextbox_vimqus, ttext[iiv]);
       UIDisable(true, &UIInputbox_awnh87);
+      UIDisable(true, &UIProgressbar_eymzer);
+      UIDisable(true, &UITextbox_859t1hi);
+      UIDisable(true, &UITextbox_olwwlae);
       UISet(&UITextbox_67ofwdh, "PS");
       strip.SetPixelColor(7, off);
     }
@@ -634,8 +730,12 @@ void loop() {
     if (isf == 5) {
       isf = 0;
       UISet(&UITextbox_vimqus, sf[isf]);
-    }
-    else if (iwm == 5) {
+    } else if (iwm == 5 && otaa == 0) {
+      initloraotaa(); //OTAA Join
+      UISet(&UITextbox_vimqus, "Send");
+    } else if (iwm == 5 && otaa == 1) {
+      sendobjectotaa(); //Manual send
+    } else if (iwm == 6) {
       if (iiv == 4) {
         iiv = 0;
         UISet(&UITextbox_vimqus, ttext[iiv]);
@@ -660,10 +760,16 @@ void loop() {
       strip.SetBrightness(50);
     } else if (iwm == 4) {
       ssv();
-    } else if (iwm == 5 && powersave == false) {
+    } else if (iwm == 5 && otaaack == 0) {
+      otaaack = 1;
+	  UISet(&UITextbox_67ofwdh, "ACK");
+    } else if (iwm == 5 && otaaack == 1) {
+      otaaack = 0;
+	  UISet(&UITextbox_67ofwdh, "NACK");
+    } else if (iwm == 6 && powersave == false) {
       powersave = true;
       iwm = 0;
-    } else if (iwm == 5 && powersave == true) {
+    } else if (iwm == 6 && powersave == true) {
       powersave = false;
     } else if (iwm > 1) {
       sendobject();
@@ -754,6 +860,10 @@ void loop() {
     sendobject();
   }
 
+  if ((currentMillis - sentMillis > interval[iiv]) && iwm == 5 && otaa == 1 && gps.location.isValid() == true && gps.location.age() < 2000) {
+    sendobjectotaa();
+  }
+    
   //light sleep timer
   if (powersave == true) {
     strip.SetBrightness(0);
