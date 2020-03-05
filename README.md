@@ -23,16 +23,19 @@ UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 a
 
 Replace the original files LoraWan.h and LoRaWan.cpp delivered by the M5Stack Library under M5Stack/src with the ones in the src directory. Delete the src directory afterwards or move it.
 
+Change the your TTN keys in initlora() funtion of the networktester.ino file. They are filled in as is from the TTN console. If you want yo use OTAA you have to register a second device for your application. 
+
 ## Instructions for Use
 
 #### Menu
 
-On boot you will be presented with the "Boot-Logo" followed by the first working mode. At the moment the tester has 6 modes to select:
+On boot you will be presented with the "Boot-Logo" followed by the first working mode. At the moment the tester has 7 modes to select:
   - [NACK](#nack) 
   - [ACK](#ack)  
   - [MAN](#man)  
   - [LCM](#lcm)
   - [SSV](#ssv)
+  - [OTAA](#otaa)
   - [SET](#set)
  
 You can move between menu items by pushing the button A. 
@@ -49,7 +52,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 
 #### ACK 
 #### (Acknowladge)
-"ACK" will perform the same test as NACK but it will request an ACK for every transmission. The RSSI and SNR values of the received packet will be shown on the display Pushing button B will let you cycle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
+"ACK" will perform the same test as NACK but it will request an ACK for every transmission. The RSSI and SNR values of the received packet will be shown on the display. Pushing button B will let you cycle through each spreadfactor. By pushig button C the display and LEDs will be turned off. Pushing button C again will turn them on.
 
 ![ACK Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ack.jpg "Fig 3. ACK")
 
@@ -72,6 +75,12 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 ![SSV Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ssv-1.jpg "Fig 6. SSV running")
 ![SSV Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/ssv-2.jpg "Fig 7. SSV results")
 
+#### OTAA 
+#### (OverTheAirActivation)
+"OTAA" enables the tester to perform OTAA-Joins. By selecting Join the tester will try to join the TTN Network. After an successful the the tester will start with periodic transmissions. You have the choice between transmission with or without ACK. The RSSI and SNR values of the received packet will be shown on the display. If there is no valid GPS fix, a packet can by manually send by pushing button B.
+
+![OTAA Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/otaa.jpg "Fig 7. OTAA")
+
 #### SET 
 #### (Settings)
 
@@ -82,6 +91,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 ## Notes
   - The DutyCycle check ist activated except for the SSV mode.
   - If you have a valid GPS fix the GPS track will be written to the SD card as a GPX file.
+  - Periodic transmission will only work with a valid GPS fix and an GPS age below 2 seconds
 
 ## ToDo
   - ~~improve botton reaction~~
