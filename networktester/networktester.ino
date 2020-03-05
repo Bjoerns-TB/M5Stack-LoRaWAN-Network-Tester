@@ -274,26 +274,38 @@ void sendobject() {
   if (oldisf != isf) {
     if (isf == 0) {
       lora.setDataRate(DR5, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     } else if (isf == 1) {
       lora.setDataRate(DR4, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     } else if (isf == 2) {
       lora.setDataRate(DR3, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     } else if (isf == 3) {
       lora.setDataRate(DR2, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     } else if (isf == 4) {
       lora.setDataRate(DR1, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     } else if (isf == 5) {
       lora.setDataRate(DR0, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
       oldisf = isf;
       cnt = 0;
     }
