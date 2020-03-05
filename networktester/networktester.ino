@@ -221,12 +221,12 @@ void initlora() {
   Serial.print(buffer);
 
   // void setId(char *DevAddr, char *DevEUI, char *AppEUI);
-  lora.setId("yourdeviceaddress", NULL, NULL);
-  //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI");
+  lora.setId("yourdeviceaddress", NULL, NULL);						//for ABP						
+  //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI");	//for OTAA
   
   // setKey(char *NwkSKey, char *AppSKey, char *AppKey);
-  lora.setKey("yourNetworkSKey", "yourappSKey", NULL);
-  //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);
+  lora.setKey("yourNetworkSKey", "yourappSKey", NULL);					//for ABP
+  //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);		//for OTAA
 
   lora.setDeviceMode(LWABP);
   lora.setDataRate(DR5, EU868);
