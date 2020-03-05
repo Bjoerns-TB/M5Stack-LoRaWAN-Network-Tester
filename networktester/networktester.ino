@@ -37,7 +37,7 @@ int oldisf = 0;
 char *dr[6] = {"DR5", "DR4", "DR3", "DR2", "DR1", "DR0"};
 char *sf[6] = {"SF7", "SF8", "SF9", "SF10", "SF11", "SF12"};
 int iwm = 0;
-char *workmode[6] = {"NACK", "ACK", "MAN", "LCM", "SSV", "OTAA", "SET"};
+char *workmode[7] = {"NACK", "ACK", "MAN", "LCM", "SSV", "OTAA", "SET"};
 char buffer[256];
 short length;
 short rssi;
@@ -685,6 +685,7 @@ void loop() {
       if (otaa == 1) {
         initloraabp();
       }
+    }
     else {
       iwm++;
       UISet(&UITextbox_eq79hh46, workmode[iwm]);
