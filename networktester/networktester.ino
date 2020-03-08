@@ -274,7 +274,29 @@ void initloraotaa() {
 void sendobject() {
   bool result = false;
 
-  if (oldisf != isf) {
+  int32_t lat = latitude * 10000;
+  int32_t lon = longitude * 10000;
+  int16_t altitude = alt * 100;
+  int8_t hdopGPS = hdop / 10;
+
+  coords[0] = lat;
+  coords[1] = lat >> 8;
+  coords[2] = lat >> 16;
+
+  coords[3] = lon;
+  coords[4] = lon >> 8;
+  coords[5] = lon >> 16;
+
+  coords[6] = altitude;
+  coords[7] = altitude >> 8;
+
+  coords[8] = hdopGPS;
+
+  sentMillis = millis();
+
+  if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
+	  
+      if (oldisf != isf) {
     if (isf == 0) {
       lora.setDataRate(DR5, EU868);
       lora.setAdaptiveDataRate(false);
@@ -313,28 +335,6 @@ void sendobject() {
       cnt = 0;
     }
   }
-
-  int32_t lat = latitude * 10000;
-  int32_t lon = longitude * 10000;
-  int16_t altitude = alt * 100;
-  int8_t hdopGPS = hdop / 10;
-
-  coords[0] = lat;
-  coords[1] = lat >> 8;
-  coords[2] = lat >> 16;
-
-  coords[3] = lon;
-  coords[4] = lon >> 8;
-  coords[5] = lon >> 16;
-
-  coords[6] = altitude;
-  coords[7] = altitude >> 8;
-
-  coords[8] = hdopGPS;
-
-  sentMillis = millis();
-
-  if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
     
     UISet(&UIInputbox_awnh87, "Sending");
     result = lora.transferPacket(coords, sizeof(coords), 5);
@@ -347,6 +347,45 @@ void sendobject() {
       UISet(&UIInputbox_awnh87, "Error");
     }
   } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
+
+      if (isf == 0) {
+      lora.setDataRate(DR5, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    } else if (isf == 1) {
+      lora.setDataRate(DR4, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    } else if (isf == 2) {
+      lora.setDataRate(DR3, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    } else if (isf == 3) {
+      lora.setDataRate(DR2, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    } else if (isf == 4) {
+      lora.setDataRate(DR1, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    } else if (isf == 5) {
+      lora.setDataRate(DR0, EU868);
+      lora.setAdaptiveDataRate(false);
+      lora.setDutyCycle(true);
+      oldisf = isf;
+      cnt = 0;
+    }
+  
     UISet(&UIInputbox_awnh87, "ACK");
     result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
 
