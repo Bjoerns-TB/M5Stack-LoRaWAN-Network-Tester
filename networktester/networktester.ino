@@ -252,7 +252,7 @@ void initlora() {
 //Settings for LoRaWAN ABP
 void initloraabp() {
   lora.setDeviceMode(LWABP);
-  lora.setAdaptiveDataRate(true);
+  lora.setAdaptiveDataRate(false);
   lora.setDutyCycle(true);
   otaa = 0;
   cnt = 0;
