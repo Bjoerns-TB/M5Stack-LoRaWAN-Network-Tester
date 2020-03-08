@@ -97,6 +97,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 
   - 08.03.2020
     - Enforce Duty Cycle check
+    - Fix SF selection and ADR for ACK and MAN mode
 
   - 05.03.2020
     - Fix SF selection and ADR for NACK mode
