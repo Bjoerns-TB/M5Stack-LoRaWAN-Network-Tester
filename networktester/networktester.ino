@@ -246,12 +246,14 @@ void initlora() {
   lora.setPower(14);
   lora.setPort(1);
   lora.setAdaptiveDataRate(false);
+  lora.setDutyCycle(true);
 }
 
 //Settings for LoRaWAN ABP
 void initloraabp() {
   lora.setDeviceMode(LWABP);
   lora.setAdaptiveDataRate(false);
+  lora.setDutyCycle(true);
   otaa = 0;
   cnt = 0;
 }
@@ -260,6 +262,7 @@ void initloraabp() {
 void initloraotaa() {
   lora.setDeviceMode(LWOTAA);
   lora.setAdaptiveDataRate(true);
+  lora.setDutyCycle(true);
   UISet(&UIInputbox_awnh87, "Joining");
   while (!lora.setOTAAJoin(JOIN, 10));
   UISet(&UIInputbox_awnh87, "Joined");
