@@ -337,7 +337,7 @@ void sendobject() {
   if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
     
     UISet(&UIInputbox_awnh87, "Sending");
-    result = lora.transferPacket(coords, sizeof(coords), 4);
+    result = lora.transferPacket(coords, sizeof(coords), 5);
 
     if (result == true) {
       cnt++;
@@ -348,7 +348,7 @@ void sendobject() {
     }
   } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
     UISet(&UIInputbox_awnh87, "ACK");
-    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 4);
+    result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
 
     if (result == true) {
       cnt++;
