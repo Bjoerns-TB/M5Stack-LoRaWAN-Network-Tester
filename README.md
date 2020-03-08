@@ -92,6 +92,24 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   - The DutyCycle check ist activated except for the SSV mode.
   - If you have a valid GPS fix the GPS track will be written to the SD card as a GPX file.
   - Periodic transmission will only work with a valid GPS fix and an GPS age below 2 seconds
+  
+## Changelog
+
+  - 05.03.2020
+    - Fix SF selection and ADR for NACK mode
+    - Add OTAA support
+    
+  - 04.03.2020
+    - Move gpsupdate task to core 0
+    
+  - 03.03.2020
+    - improve gspupdate task
+    
+  - 28.02.2020
+    - fix typos
+    
+  - 27.02.2020
+    - switch to M5.Power library
 
 ## ToDo
   - ~~improve botton reaction~~
