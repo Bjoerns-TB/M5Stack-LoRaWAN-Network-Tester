@@ -95,6 +95,9 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   
 ## Changelog
 
+  - 08.03.2020
+    - Enforce Duty Cycle check
+
   - 05.03.2020
     - Fix SF selection and ADR for NACK mode
     - Add OTAA support
