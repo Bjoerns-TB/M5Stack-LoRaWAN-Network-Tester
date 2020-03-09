@@ -105,7 +105,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
     - Fix SF selection and ADR for ACK and MAN mode
 
   - 05.03.2020
-    - Fix SF selection and ADR for NACK mode
+    - Fix SF selection and ADR for NACK and LCR mode
     - Add OTAA support
     
   - 04.03.2020
