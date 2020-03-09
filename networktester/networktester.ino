@@ -350,6 +350,8 @@ void sendobject() {
       cnt++;
       txcnt = String("Sent " + String(cnt));
       UISet(&UIInputbox_awnh87, txcnt);
+    } else if (lora.dutycycle == true) {
+      UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
