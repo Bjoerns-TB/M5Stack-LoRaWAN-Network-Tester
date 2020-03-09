@@ -614,6 +614,15 @@ void LoRaWanClass::setDeviceLowPower(void)
     smartDelay(DEFAULT_TIMEWAIT);
 }
 
+void LoRaWanClass::sendDevicePing(void)
+{
+    sendCommand("AT\r\n");
+#if _DEBUG_SERIAL_
+    loraDebugPrint(DEFAULT_DEBUGTIME);
+#endif
+    smartDelay(DEFAULT_TIMEWAIT);
+}
+
 void LoRaWanClass::setDeviceReset(void)
 {
     sendCommand("AT+RESET\r\n");
