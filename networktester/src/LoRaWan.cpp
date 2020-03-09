@@ -275,6 +275,7 @@ bool LoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned ch
 #if _DEBUG_SERIAL_    
     Serial.print(_buffer);
 #endif
+    dutycycle = false;
     if(strstr(_buffer, "+MSGHEX: No band")){
     dutycycle = true;
     }
@@ -335,7 +336,11 @@ bool LoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
     Serial.print(_buffer);
-#endif    
+#endif
+    dutycycle = false;
+    if(strstr(_buffer, "+MSGHEX: No band")){
+    dutycycle = true;
+    } 
     if(strstr(_buffer, "+MSG: Done"))return true;
     return false;
 }
