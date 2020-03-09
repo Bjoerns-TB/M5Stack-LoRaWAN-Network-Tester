@@ -493,6 +493,8 @@ void sendobject() {
       UISet(&UITextbox_olwwlae, charsnr);
       UISet(&UIInputbox_6nssds, gwcnt);
 
+    } else if (lora.dutycycle == true){
+      UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
