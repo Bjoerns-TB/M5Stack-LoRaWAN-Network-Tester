@@ -98,6 +98,8 @@ US915   0           SF10/125 kHz    980    | 0       30dBm
 class LoRaWanClass
 {
     public:
+  
+        bool dutycycle = false;
     
         LoRaWanClass(void);
         
