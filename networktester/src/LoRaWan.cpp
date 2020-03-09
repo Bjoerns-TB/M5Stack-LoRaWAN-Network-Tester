@@ -274,7 +274,10 @@ bool LoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned ch
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
     Serial.print(_buffer);
-#endif    
+#endif
+    if(strstr(_buffer, "+MSGHEX: No band")){
+    dutycycle = true;
+    }
     if(strstr(_buffer, "+MSGHEX: Done"))return true;
     return false;
 }
