@@ -428,7 +428,7 @@ bool LoRaWanClass::transferProprietaryPacket(char *buffer, unsigned char timeout
 
 bool LoRaWanClass::transferProprietaryPacket(unsigned char *buffer, unsigned char length, unsigned char timeout)
 {
-    char temp[2] = {0};
+    char temp[3] = {0};
     
     while(SerialLoRa.available())SerialLoRa.read();
     
@@ -682,7 +682,7 @@ bool LoRaWanClass::transferPacketP2PMode(char *buffer, unsigned char timeout)
 
 bool LoRaWanClass::transferPacketP2PMode(unsigned char *buffer, unsigned char length, unsigned char timeout)
 {
-    char temp[2] = {0};
+    char temp[3] = {0};
     
     sendCommand("AT+TEST=TXLRPKT,\"");
     for(int i = 0; i < length; i ++)
