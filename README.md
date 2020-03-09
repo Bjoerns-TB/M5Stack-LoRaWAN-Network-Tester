@@ -98,14 +98,14 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   - 09.03.2020
     - Add LowPower mode for LoRaWAN module
     - improve SF selection, ADR, and Duty Cycle check
-    - inform about Duty Cycle restriction in NACK mode
-  
+    - inform about Duty Cycle restriction in NACK and LCR mode
+   
   - 08.03.2020
     - Enforce Duty Cycle check
     - Fix SF selection and ADR for ACK and MAN mode
 
   - 05.03.2020
-    - Fix SF selection and ADR for NACK and LCR mode
+    - Fix SF selection and ADR for NACK mode
     - Add OTAA support
     
   - 04.03.2020
