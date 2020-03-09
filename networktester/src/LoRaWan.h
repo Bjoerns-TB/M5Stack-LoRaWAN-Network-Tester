@@ -413,7 +413,7 @@ class LoRaWanClass
         void setDeviceLowPower(void);
   
         /**
-         *  \brief Set device into low power mode
+         *  \brief Send Ping command
          *  
          *  \return Return null
          */
