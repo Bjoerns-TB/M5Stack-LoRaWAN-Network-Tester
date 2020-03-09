@@ -247,19 +247,23 @@ void initlora() {
   lora.setPort(1);
   lora.setAdaptiveDataRate(false);
   lora.setDutyCycle(true);
+  lora.setDeviceLowPower();
 }
 
 //Settings for LoRaWAN ABP
 void initloraabp() {
+  lora.sendDevicePing();
   lora.setDeviceMode(LWABP);
   lora.setAdaptiveDataRate(false);
   lora.setDutyCycle(true);
   otaa = 0;
   cnt = 0;
+  lora.setDeviceLowPower();
 }
 
 //Settings for LoRaWAN OTAA
 void initloraotaa() {
+  lora.sendDevicePing();
   lora.setDeviceMode(LWOTAA);
   lora.setAdaptiveDataRate(true);
   lora.setDutyCycle(true);
@@ -268,6 +272,7 @@ void initloraotaa() {
   UISet(&UIInputbox_awnh87, "Joined");
   otaa = 1;
   cnt = 0;
+  lora.setDeviceLowPower();
 }
 
 //Send data using LoRaWAN
@@ -295,6 +300,8 @@ void sendobject() {
   sentMillis = millis();
 
   if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
+	  
+	lora.sendDevicePing();
 	  
       if (oldisf != isf) {
     if (isf == 0) {
@@ -347,42 +354,32 @@ void sendobject() {
       UISet(&UIInputbox_awnh87, "Error");
     }
   } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
+	  
+	lora.sendDevicePing();
 
       if (isf == 0) {
       lora.setDataRate(DR5, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     } else if (isf == 1) {
       lora.setDataRate(DR4, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     } else if (isf == 2) {
       lora.setDataRate(DR3, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     } else if (isf == 3) {
       lora.setDataRate(DR2, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     } else if (isf == 4) {
       lora.setDataRate(DR1, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     } else if (isf == 5) {
       lora.setDataRate(DR0, EU868);
-      lora.setAdaptiveDataRate(false);
-      lora.setDutyCycle(true);
-      oldisf = isf;
+      oldisf = 6;
       cnt = 0;
     }
   
@@ -427,6 +424,49 @@ void sendobject() {
       UISet(&UIInputbox_awnh87, "Error");
     }
   } else if (iwm == 3) {
+	  
+    lora.sendDevicePing();
+
+    if (oldisf != isf) {
+      if (isf == 0) {
+        lora.setDataRate(DR5, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      } else if (isf == 1) {
+        lora.setDataRate(DR4, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      } else if (isf == 2) {
+        lora.setDataRate(DR3, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      } else if (isf == 3) {
+        lora.setDataRate(DR2, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      } else if (isf == 4) {
+        lora.setDataRate(DR1, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      } else if (isf == 5) {
+        lora.setDataRate(DR0, EU868);
+        lora.setAdaptiveDataRate(false);
+        lora.setDutyCycle(true);
+        oldisf = isf;
+        cnt = 0;
+      }
+    }
+	  
     UISet(&UIInputbox_awnh87, "LCR");
     result = lora.transferPacketLinkCheckReq(5);
 
@@ -455,6 +495,7 @@ void sendobject() {
       UISet(&UIInputbox_awnh87, "Error");
     }
   }
+  lora.setDeviceLowPower();	
 }
 
 void sendobjectotaa() {
@@ -484,13 +525,15 @@ void sendobjectotaa() {
   sentMillis = millis();
 
   Serial.println(gps.location.age());
+	
+  lora.sendDevicePing();
 
   UISet(&UIInputbox_awnh87, "Sending");
 	
   if (otaaack == 0) {
-  result = lora.transferPacket(coords, sizeof(coords), 4);
+  result = lora.transferPacket(coords, sizeof(coords), 5);
   } else if (otaaack == 1) {
-  result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 4);
+  result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
   }
 
   if (result == true) {
@@ -516,6 +559,7 @@ void sendobjectotaa() {
   } else {
     UISet(&UIInputbox_awnh87, "Error");
   }
+  lora.setDeviceLowPower();
 }
 
 //SiteSurvey function
@@ -526,6 +570,8 @@ void ssv() {
 
   bool result = false;
   ssvresult = "DR ";
+	
+  lora.sendDevicePing();
 
   UISet(&UIInputbox_awnh87, "SSV running");
 
@@ -610,6 +656,7 @@ void ssv() {
 
   lora.setDutyCycle(true);
   lora.setDataRate(DR5, EU868);
+  lora.setDeviceLowPower();
   isf = 0;
   cnt = 0;
 }
