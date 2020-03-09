@@ -98,6 +98,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
   - 09.03.2020
     - Add LowPower mode for LoRaWAN module
     - improve SF selection, ADR, and Duty Cycle check
+    - inform about Duty Cycle restriction in NACK mode
   
   - 08.03.2020
     - Enforce Duty Cycle check
@@ -120,11 +121,10 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
     - switch to M5.Power library
 
 ## ToDo
-  - ~~improve botton reaction~~
-  - ~~cleanup the code~~
+  - create tasks for NeoPixel update and M5UI
+  - possability to undefine M5Go Base
   - improve powersave features
-  - ~~Add OTAA~~ 
-  - inform about DutyCycle restriction on display
+
 
 [M5Stack]: https://github.com/m5stack/M5Stack
 [TinyGPSPlus]: https://github.com/mikalhart/TinyGPSPlus
