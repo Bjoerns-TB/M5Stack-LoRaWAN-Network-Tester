@@ -338,7 +338,7 @@ bool LoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
     Serial.print(_buffer);
 #endif
     dutycycle = false;
-    if(strstr(_buffer, "+MSGHEX: No band")){
+    if(strstr(_buffer, "+MSG: No band")){
     dutycycle = true;
     } 
     if(strstr(_buffer, "+MSG: Done"))return true;
