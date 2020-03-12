@@ -146,8 +146,7 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
     - switch to M5.Power library
 
 ## ToDo
-  - create tasks for NeoPixel update and M5UI
-  - possability to undefine M5Go Base
+  - create tasks for M5UI
   - improve powersave features
 
 
