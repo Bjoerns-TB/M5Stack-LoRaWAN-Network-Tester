@@ -1,17 +1,28 @@
-#include <M5Stack.h>        //  https://github.com/m5stack/M5Stack
-#include <TinyGPS++.h>        //  https://github.com/mikalhart/TinyGPSPlus
-#include <NeoPixelBrightnessBus.h>  //  https://github.com/Makuna/NeoPixelBus
-#include <M5_UI.h>          //  https://github.com/dsiberia9s/M5_UI
+#include <M5Stack.h>				//  https://github.com/m5stack/M5Stack
+#include <M5_UI.h>					//  https://github.com/dsiberia9s/M5_UI
 #include <LoRaWan.h>
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
 
+#define M5go
+#define M5gps
+
+#ifdef M5go
+#include <NeoPixelBrightnessBus.h>  //  https://github.com/Makuna/NeoPixelBus
+#endif
+
+#ifdef M5gps
+#include <TinyGPS++.h>        //  https://github.com/mikalhart/TinyGPSPlus
+#endif
+
 //Task
 TaskHandle_t TaskGPS;
+TaskHandle_t TaskPixel;
 
 //Image
 extern const unsigned char gImage_logoM5[];
 
+#ifdef M5go
 //NeoPixel
 const uint16_t PixelCount = 10;
 const uint8_t PixelPin = 15;
@@ -23,13 +34,17 @@ RgbColor lightblue(0, 95, 128);
 RgbColor yellow(128, 128, 0);
 RgbColor orange(128, 64, 0);
 RgbColor off(0, 0, 0);
+#endif
 
+#ifdef M5gps
 //GPS
 static const uint32_t GPSBaud = 9600;
 TinyGPSPlus gps;
 HardwareSerial serialgps(2);
+#endif
 float latitude, longitude, hdop, alt, hdop2;
 int sats;
+
 
 //LoRa
 int isf = 0;
@@ -45,6 +60,7 @@ float snr;
 char charsnr[5];
 short gwcnt;
 byte coords[9];
+byte ncoords[1];
 long sentMillis = 0;
 long currentMillis = 0;
 int iiv = 0;
@@ -92,9 +108,9 @@ String UITextbox_67ofwdh = "Dim";     //Dimming (B3)
 String UIProgressbar_eymzer = "70";   //Progressbar RSSI
 String UITextbox_859t1hi = "-130";    //RSSI
 String UIInputbox_awnh87 = "inactive";//Status
-String UITextbox_4t0l0bn = "0";     //Stattelites
-String UITextbox_q7sl3uo = "0";     //HDOP
-String UITextbox_403ohip = "0";     //Battery Level
+String UITextbox_4t0l0bn = "0";		  //Stattelites
+String UITextbox_q7sl3uo = "0";		  //HDOP
+String UITextbox_403ohip = "0";		  //Battery Level
 String UITextbox_olwwlae = "-20.00";  //SNR
 String UITextbox_7mnuudb = "SNR";     //SNR
 
@@ -118,6 +134,7 @@ void LayerFunction_default(String* rootVar) {
   UILayer("default");
 }
 
+#ifdef M5gps
 static void gpsupdate(void * pcParameters)
 {
   for (;;) {
@@ -132,6 +149,65 @@ static void gpsupdate(void * pcParameters)
     TIMERG0.wdt_wprotect = 0;
   }
 }
+#endif
+
+#ifdef M5go
+static void pixelupdate(void * pcParameters)
+{
+  for (;;) {
+
+#ifdef M5gps
+    //Change NeoPixel 4
+    if (gps.satellites.value() < 3) {
+      strip.SetPixelColor(4, red);
+    }
+    else if (gps.satellites.value() < 6) {
+      strip.SetPixelColor(4, yellow);
+    }
+    else {
+      strip.SetPixelColor(4, green);
+    }
+
+    //Change NeoPixel 0
+    if (gps.hdop.value() < 500) {
+      strip.SetPixelColor(0, green);
+    }
+    else if (gps.hdop.value() < 1000) {
+      strip.SetPixelColor(0, yellow);
+    }
+    else {
+      strip.SetPixelColor(0, red);
+    }
+
+    //Change NeoPixel 2
+    if (gps.location.isValid() == false) {
+      strip.SetPixelColor(2, red);
+    }
+    else if (gps.location.isValid() && gps.location.age() > 2000) {
+      strip.SetPixelColor(2, red);
+    }
+    else if (gps.location.isValid() == true) {
+      strip.SetPixelColor(2, green);
+    }
+    else {
+      strip.SetPixelColor(2, green);
+    }
+#endif
+
+    //Change NeoPixel 7 for RX status
+    if ((iwm == 0) || (iwm == 4) || (iwm == 6)) {
+      strip.SetPixelColor(7, off);
+    }
+
+    strip.Show();
+
+    TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;
+    TIMERG0.wdt_feed = 1;
+    TIMERG0.wdt_wprotect = 0;
+    smartDelay(500);
+  }
+}
+#endif
 
 //Delay without delay
 static void smartDelay(unsigned long ms)
@@ -141,6 +217,7 @@ static void smartDelay(unsigned long ms)
   {} while (millis() - start < ms);
 }
 
+#ifdef M5gps
 //Write GPS-Data into variables
 void gpsdata() {
   year = gps.date.year();
@@ -154,7 +231,9 @@ void gpsdata() {
   alt = gps.altitude.meters();
   hdop = gps.hdop.value();
 }
+#endif
 
+#ifdef M5gps
 //Initialize GPX-Track to SD-Card
 void gpxinit() {
   if (cardin == true && gps.location.isValid() == true) {
@@ -203,7 +282,7 @@ void writegpx() {
     dataFile.close();
   }
 }
-
+#endif
 
 //Settings for LoRaWAN
 void initlora() {
@@ -300,8 +379,13 @@ void sendobject() {
 
   sentMillis = millis();
 
-  if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
+#ifndef M5gps
+  if (iwm == 0) {
+#else
+    if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
+#endif
 
+    UISet(&UIInputbox_awnh87, "Sending");
     lora.sendDevicePing();
 
     if (oldisf != isf) {
@@ -344,8 +428,11 @@ void sendobject() {
       }
     }
 
-    UISet(&UIInputbox_awnh87, "Sending");
+#ifdef M5gps
     result = lora.transferPacket(coords, sizeof(coords), 5);
+#else
+    result = lora.transferPacket(ncoords, sizeof(ncoords), 5);
+#endif
 
     if (result == true) {
       cnt++;
@@ -356,8 +443,13 @@ void sendobject() {
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
-  } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
-
+    #ifndef M5gps
+  } else if ((iwm == 1) || (iwm == 2)) {
+    #else
+    } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
+#endif
+    
+    UISet(&UIInputbox_awnh87, "ACK");
     lora.sendDevicePing();
 
     if (isf == 0) {
@@ -386,8 +478,12 @@ void sendobject() {
       cnt = 0;
     }
 
-    UISet(&UIInputbox_awnh87, "ACK");
+#ifdef M5gps
     result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
+#else
+    result = lora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
+#endif
+
 
     if (result == true) {
       cnt++;
@@ -409,6 +505,7 @@ void sendobject() {
       UISet(&UITextbox_859t1hi, rssi);
       UISet(&UITextbox_olwwlae, charsnr);
 
+#ifdef M5go
       if (rssi < -120) {
         strip.SetPixelColor(7, blue);
       } else if (rssi < -115) {
@@ -422,12 +519,14 @@ void sendobject() {
       } else {
         strip.SetPixelColor(7, red);
       }
+#endif
 
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
   } else if (iwm == 3) {
 
+    UISet(&UIInputbox_awnh87, "LCR");
     lora.sendDevicePing();
 
     if (oldisf != isf) {
@@ -470,7 +569,6 @@ void sendobject() {
       }
     }
 
-    UISet(&UIInputbox_awnh87, "LCR");
     result = lora.transferPacketLinkCheckReq(5);
 
     if (result == true) {
@@ -494,7 +592,23 @@ void sendobject() {
       UISet(&UITextbox_olwwlae, charsnr);
       UISet(&UIInputbox_6nssds, gwcnt);
 
-    } else if (lora.dutycycle == true){
+#ifdef M5go
+      if (rssi < -120) {
+        strip.SetPixelColor(7, blue);
+      } else if (rssi < -115) {
+        strip.SetPixelColor(7, lightblue);
+      } else if (rssi < -110) {
+        strip.SetPixelColor(7, green);
+      } else if (rssi < -105) {
+        strip.SetPixelColor(7, yellow);
+      } else if (rssi < -100) {
+        strip.SetPixelColor(7, orange);
+      } else {
+        strip.SetPixelColor(7, red);
+      }
+#endif
+
+    } else if (lora.dutycycle == true) {
       UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
@@ -504,8 +618,6 @@ void sendobject() {
 }
 
 void sendobjectotaa() {
-
-  Serial.println("Sending OTAA");
 
   bool result = false;
 
@@ -529,17 +641,23 @@ void sendobjectotaa() {
 
   sentMillis = millis();
 
-  Serial.println(gps.location.age());
-
   lora.sendDevicePing();
 
   UISet(&UIInputbox_awnh87, "Sending");
 
+#ifdef M5gps
   if (otaaack == 0) {
     result = lora.transferPacket(coords, sizeof(coords), 5);
   } else if (otaaack == 1) {
     result = lora.transferPacketWithConfirmed(coords, sizeof(coords), 5);
   }
+#else
+  if (otaaack == 0) {
+    result = lora.transferPacket(ncoords, sizeof(ncoords), 5);
+  } else if (otaaack == 1) {
+    result = lora.transferPacketWithConfirmed(ncoords, sizeof(ncoords), 5);
+  }
+#endif
 
   if (result == true) {
     cnt++;
@@ -560,25 +678,43 @@ void sendobjectotaa() {
       UISet(&UIProgressbar_eymzer, rssi + 130);
       UISet(&UITextbox_859t1hi, rssi);
       UISet(&UITextbox_olwwlae, charsnr);
+
+#ifdef M5go
+      if (rssi < -120) {
+        strip.SetPixelColor(7, blue);
+      } else if (rssi < -115) {
+        strip.SetPixelColor(7, lightblue);
+      } else if (rssi < -110) {
+        strip.SetPixelColor(7, green);
+      } else if (rssi < -105) {
+        strip.SetPixelColor(7, yellow);
+      } else if (rssi < -100) {
+        strip.SetPixelColor(7, orange);
+      } else {
+        strip.SetPixelColor(7, red);
+      }
+#endif
+
     }
+  } else if (lora.dutycycle == true) {
+    UISet(&UIInputbox_awnh87, "DutyCycle");
   } else {
     UISet(&UIInputbox_awnh87, "Error");
   }
   lora.setDeviceLowPower();
 }
 
+#ifdef M5gps
 //SiteSurvey function
 void ssv() {
 
+  UISet(&UIInputbox_awnh87, "SSV running");
   ssvinit();
+  lora.sendDevicePing();
   lora.setDutyCycle(false);
 
   bool result = false;
   ssvresult = "DR ";
-
-  lora.sendDevicePing();
-
-  UISet(&UIInputbox_awnh87, "SSV running");
 
   lora.setDataRate(DR5, EU868);
   isf = 0;
@@ -732,6 +868,7 @@ void writessv() {
     }
   }
 }
+#endif
 
 
 //initial setup
@@ -740,15 +877,15 @@ void setup() {
   M5.begin();
   M5.Power.begin();
   Wire.begin();
+#ifdef M5gps
   serialgps.begin(9600, SERIAL_8N1, 16, 17);
-  strip.Begin();
-  strip.Show();
-  strip.SetBrightness(50);
+#endif
   M5.Lcd.setBrightness(50);
   //M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)imgName);
   M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)gImage_logoM5);
   initlora();
 
+#ifdef M5gps
   xTaskCreatePinnedToCore(
     gpsupdate,
     "TaskGPS",
@@ -757,12 +894,31 @@ void setup() {
     1,
     &TaskGPS,
     0);
+#endif
+
+#ifdef M5go
+  strip.Begin();
+  strip.Show();
+  strip.SetBrightness(50);
+
+  xTaskCreatePinnedToCore(
+    pixelupdate,
+    "TaskPixel",
+    10000,
+    NULL,
+    1,
+    &TaskPixel,
+    0);
+#endif
 
   /* Prepare UI */
   UIBegin();
   LayerFunction_default(0);
+
+#ifdef M5gps
   M5.Lcd.drawBitmap(5, 2, 24, 24, (uint16_t *)ICON_10_24);
   M5.Lcd.drawBitmap(65, 5, 24, 24, (uint16_t *)ICON_23_24);
+#endif
 
   if (SD.exists(filename)) {
     M5.Lcd.drawBitmap(200, 5, 24, 24, (uint16_t *)ICON_22_24);
@@ -778,6 +934,11 @@ void setup() {
   UIDisable(true, &UITextbox_7mnuudb);
   UIDisable(false, &UIInputbox_awnh87);
 
+  #ifndef M5gps
+  UIDisable(true, &UITextbox_4t0l0bn);
+  UIDisable(true, &UITextbox_q7sl3uo);
+  #endif
+
   Serial.println("Started");
 }
 
@@ -791,8 +952,13 @@ void loop() {
       if (otaa == 1) {
         initloraabp();
       }
-    }
-    else {
+    } else if (iwm == 3) {
+      iwm++;
+#ifndef M5gps
+      iwm++;
+#endif
+      UISet(&UITextbox_eq79hh46, workmode[iwm]);
+    } else {
       iwm++;
       UISet(&UITextbox_eq79hh46, workmode[iwm]);
     }
@@ -817,11 +983,16 @@ void loop() {
       UIDisable(true, &UIInputbox_6nssds);
       UIDisable(true, &UITextbox_7mnuudb);
     } else if (iwm == 5) {
+#ifndef M5gps
+      UIDisable(true, &UIInputbox_6nssds);
+      UIDisable(true, &UITextbox_7mnuudb);
+#endif
       UISet(&UITextbox_vimqus, "Join");
       UISet(&UITextbox_67ofwdh, "NACK");
       UIDisable(false, &UIProgressbar_eymzer);
       UIDisable(false, &UITextbox_859t1hi);
       UIDisable(false, &UITextbox_olwwlae);
+      //strip.SetPixelColor(7, off);
     } else if (iwm == 6) {
       UISet(&UITextbox_vimqus, ttext[iiv]);
       UIDisable(true, &UIInputbox_awnh87);
@@ -829,7 +1000,6 @@ void loop() {
       UIDisable(true, &UITextbox_859t1hi);
       UIDisable(true, &UITextbox_olwwlae);
       UISet(&UITextbox_67ofwdh, "PS");
-      strip.SetPixelColor(7, off);
     }
   }
 
@@ -860,13 +1030,19 @@ void loop() {
     if (iwm < 2 && dim == false) {
       dim = true;
       M5.Lcd.setBrightness(0);
+#ifdef M5go
       strip.SetBrightness(0);
+#endif
     } else if (iwm < 2 && dim == true) {
       dim = false;
       M5.Lcd.setBrightness(50);
+#ifdef M5go
       strip.SetBrightness(50);
+#endif
     } else if (iwm == 4) {
+#ifdef M5gps
       ssv();
+#endif
     } else if (iwm == 5 && otaaack == 0) {
       otaaack = 1;
       UISet(&UITextbox_67ofwdh, "ACK");
@@ -883,22 +1059,15 @@ void loop() {
     }
   }
 
+#ifdef M5gps
   //Update GPS Data
   gpsdata();
+#endif
 
+#ifdef M5gps
   //Print satellites and change NeoPixel 4
   sats = gps.satellites.value();
   UISet(&UITextbox_4t0l0bn, sats);
-
-  if (gps.satellites.value() < 3) {
-    strip.SetPixelColor(4, red);
-  }
-  else if (gps.satellites.value() < 6) {
-    strip.SetPixelColor(4, yellow);
-  }
-  else {
-    strip.SetPixelColor(4, green);
-  }
 
   //Print HDOP and change NeoPixel 0
   hdop = gps.hdop.value();
@@ -906,33 +1075,20 @@ void loop() {
   String stringhdop = String(hdop2);
   UISet(&UITextbox_q7sl3uo, stringhdop);
 
-  if (gps.hdop.value() < 500) {
-    strip.SetPixelColor(0, green);
-  }
-  else if (gps.hdop.value() < 1000) {
-    strip.SetPixelColor(0, yellow);
-  }
-  else {
-    strip.SetPixelColor(0, red);
-  }
-
   //Print GPS fix status und change NeoPixel 2
   if (gps.location.isValid() == false) {
-    strip.SetPixelColor(2, red);
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_25_24);
   }
   else if (gps.location.isValid() && gps.location.age() > 2000) {
-    strip.SetPixelColor(2, red);
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_25_24);
   }
   else if (gps.location.isValid() == true) {
-    strip.SetPixelColor(2, green);
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_20_24);
   }
   else {
-    strip.SetPixelColor(2, green);
     M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_20_24);
   }
+#endif
 
   //Battery Status
   if (M5.Power.isCharging() == true) {
@@ -949,8 +1105,11 @@ void loop() {
     UISet(&UITextbox_403ohip, strbattlevel);
   }
 
+#ifdef M5go
   strip.Show();
+#endif
 
+#ifdef M5gps
   //Init of SD Card for GPX-file
   if (sdwrite == false) {
     gpxinit();
@@ -960,6 +1119,7 @@ void loop() {
   if (sdwrite == true) {
     writegpx();
   }
+#endif
 
   //Sending intervall
   currentMillis = millis();
@@ -967,13 +1127,21 @@ void loop() {
     sendobject();
   }
 
+#ifdef M5gps
   if ((currentMillis - sentMillis > interval[iiv]) && iwm == 5 && otaa == 1 && gps.location.isValid() == true && gps.location.age() < 2000) {
     sendobjectotaa();
   }
+#else
+  if ((currentMillis - sentMillis > interval[iiv]) && iwm == 5 && otaa == 1) {
+    sendobjectotaa();
+  }
+#endif
 
   //light sleep timer
   if (powersave == true) {
+#ifdef M5go
     strip.SetBrightness(0);
+#endif
     esp_sleep_enable_timer_wakeup(15000000);
     esp_light_sleep_start();
   }
