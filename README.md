@@ -21,6 +21,22 @@ This is designed to work with the following hardware:
 Upload this sketch to your M5 using the Arduino IDE. M5Stack Fire users have to disable PSRAM, because it will interfer with UART2.
 UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp The UART Port on the LoRaWAN module has to changed (solderpads) to use this ports.
 
+Serial ports declaration
+- LoRaWan.h
+  #define SerialLoRa Serial1
+    To be used with GPS module and changed UART port on LoRaWAN module
+    
+  #define SerialLoRa Serial2
+    To be used without GPS module and unchanged UART port on LoRaWAN module
+    
+- LoRaWan.cpp
+  SerialLoRa.begin(9600, SERIAL_8N1, 2, 5);
+    To be used with GPS module and changed UART port on LoRaWAN module
+    
+  SerialLoRa.begin(9600, SERIAL_8N1, 16, 17);
+    To be used without GPS module and unchanged UART port on LoRaWAN module
+  
+
 Replace the original files LoraWan.h and LoRaWan.cpp delivered by the M5Stack Library under M5Stack/src with the ones in the src directory. Delete the src directory afterwards or move it.
 
 Change the your TTN keys in initlora() funtion of the networktester.ino file. They are filled in as is from the TTN console. If you want yo use OTAA you have to register a second device for your application. 
