@@ -1144,6 +1144,7 @@ void loop() {
 #endif
     esp_sleep_enable_timer_wakeup(15000000);
     esp_light_sleep_start();
+    smartDelay(1000);
   }
 
   //used to deflicker the display, more possible, but with less reactive buttons
