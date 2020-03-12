@@ -266,10 +266,10 @@ void initloraotaa() {
   lora.sendDevicePing();
   lora.setDeviceMode(LWOTAA);
   lora.setAdaptiveDataRate(true);
-  lora.setDutyCycle(true);
   UISet(&UIInputbox_awnh87, "Joining");
   while (!lora.setOTAAJoin(JOIN, 10));
   UISet(&UIInputbox_awnh87, "Joined");
+  lora.setDutyCycle(true);
   otaa = 1;
   cnt = 0;
   lora.setDeviceLowPower();
