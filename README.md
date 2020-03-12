@@ -7,7 +7,7 @@ This is designed to work with the following hardware:
   - M5Core (Basic, Gray or Fire)
   - M5Go Base
   - M5Stack GPS Module
-  - M5Stack LoRaWAN Module
+  - M5Stack LoRaWAN Module (Firmware 2.1.19 mandatory for OTAA)
 
 #### Required Libraries!
   - [M5Stack]
@@ -78,6 +78,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 #### OTAA 
 #### (OverTheAirActivation)
 "OTAA" enables the tester to perform OTAA-Joins. By selecting Join the tester will try to join the TTN Network. After an successful the the tester will start with periodic transmissions. You have the choice between transmission with or without ACK. The RSSI and SNR values of the received packet will be shown on the display. If there is no valid GPS fix, a packet can by manually send by pushing button B.
+Fimrware version 2.1.19 is mandatory for OTAA to work.
 
 ![OTAA Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/otaa.jpg "Fig 7. OTAA")
 
