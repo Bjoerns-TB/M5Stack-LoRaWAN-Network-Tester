@@ -5,8 +5,8 @@ A LoRaWAN Network Tester based on the M5Stack, compatible with TTN (The Things N
 ## Setup
 This is designed to work with the following hardware:
   - M5Core (Basic, Gray or Fire)
-  - M5Go Base
-  - M5Stack GPS Module
+  - M5Go Base (optional)
+  - M5Stack GPS Module (optional)
   - M5Stack LoRaWAN Module (Firmware 2.1.19 mandatory for OTAA)
 
 #### Required Libraries!
@@ -36,8 +36,10 @@ Serial ports declaration
     
   - SerialLoRa.begin(9600, SERIAL_8N1, 16, 17);
     - To be used without GPS module and unchanged UART port on LoRaWAN module
+    
+By commenting out #define M5go it is possible to disable the M5GO Base. This will disable all NeoPixel related code and features.
+By commenting out #define M5gps ist is possible to disable the M5GPS module. This will disable all GPS related code and features. 
   
-
 Replace the original files LoraWan.h and LoRaWan.cpp delivered by the M5Stack Library under M5Stack/src with the ones in the src directory. Delete the src directory afterwards or move it.
 
 Change the your TTN keys in initlora() funtion of the networktester.ino file. They are filled in as is from the TTN console. If you want yo use OTAA you have to register a second device for your application. 
@@ -112,6 +114,11 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
   - Periodic transmission will only work with a valid GPS fix and an GPS age below 2 seconds
   
 ## Changelog
+
+  - 12.03.2020
+    - Fix OTAA join, caused by Duty Cycle limitation
+    - Improve status information
+    - Add the possability to use the tester without M5GO Base and/or GPS module.
 
   - 09.03.2020
     - Add LowPower mode for LoRaWAN module
