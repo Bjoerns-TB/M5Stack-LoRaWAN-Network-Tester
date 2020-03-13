@@ -117,6 +117,7 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
 
   - 13.03.2020
     - Enable ESP32 Deep Sleep mode
+    - Allign packet counter to TTN console
 
   - 12.03.2020
     - Fix OTAA join, caused by Duty Cycle limitation
