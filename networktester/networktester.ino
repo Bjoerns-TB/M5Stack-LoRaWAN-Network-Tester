@@ -66,7 +66,7 @@ long currentMillis = 0;
 RTC_DATA_ATTR int iiv = 0;
 long interval[5] = {15000, 30000, 45000, 60000, 120000};
 char *ttext[5] = {"15s", "30s", "45s", "60s", "120s"};
-int cnt = 0;
+RTC_DATA_ATTR int cnt = -1;
 String txcnt;
 int otaa = 0;
 int otaaack = 0;
@@ -338,7 +338,7 @@ void initloraabp() {
   lora.setAdaptiveDataRate(false);
   lora.setDutyCycle(true);
   otaa = 0;
-  cnt = 0;
+  cnt = -1;
   lora.setDeviceLowPower();
 }
 
@@ -353,7 +353,7 @@ void initloraotaa() {
   UISet(&UIInputbox_awnh87, "Joined");
   lora.setDutyCycle(true);
   otaa = 1;
-  cnt = 0;
+  cnt = -1;
   lora.setDeviceLowPower();
 }
 
@@ -396,37 +396,37 @@ void sendobject() {
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 1) {
         lora.setDataRate(DR4, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 2) {
         lora.setDataRate(DR3, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 3) {
         lora.setDataRate(DR2, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 4) {
         lora.setDataRate(DR1, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 5) {
         lora.setDataRate(DR0, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       }
     }
 
@@ -457,27 +457,27 @@ void sendobject() {
     if (isf == 0) {
       lora.setDataRate(DR5, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     } else if (isf == 1) {
       lora.setDataRate(DR4, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     } else if (isf == 2) {
       lora.setDataRate(DR3, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     } else if (isf == 3) {
       lora.setDataRate(DR2, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     } else if (isf == 4) {
       lora.setDataRate(DR1, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     } else if (isf == 5) {
       lora.setDataRate(DR0, EU868);
       oldisf = 6;
-      cnt = 0;
+      cnt = -1;
     }
 
 #ifdef M5gps
@@ -537,37 +537,37 @@ void sendobject() {
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 1) {
         lora.setDataRate(DR4, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 2) {
         lora.setDataRate(DR3, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 3) {
         lora.setDataRate(DR2, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 4) {
         lora.setDataRate(DR1, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       } else if (isf == 5) {
         lora.setDataRate(DR0, EU868);
         lora.setAdaptiveDataRate(false);
         lora.setDutyCycle(true);
         oldisf = isf;
-        cnt = 0;
+        cnt = -1;
       }
     }
 
@@ -801,7 +801,7 @@ void ssv() {
   lora.setDataRate(DR5, EU868);
   lora.setDeviceLowPower();
   isf = 0;
-  cnt = 0;
+  cnt = -1;
 }
 
 //Initialize GeoJSON file
