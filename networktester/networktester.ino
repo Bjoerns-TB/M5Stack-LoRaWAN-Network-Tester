@@ -51,7 +51,7 @@ int isf = 0;
 int oldisf = 0;
 char *dr[6] = {"DR5", "DR4", "DR3", "DR2", "DR1", "DR0"};
 char *sf[6] = {"SF7", "SF8", "SF9", "SF10", "SF11", "SF12"};
-int iwm = 0;
+RTC_DATA_ATTR int iwm = 0;
 char *workmode[7] = {"NACK", "ACK", "MAN", "LCM", "SSV", "OTAA", "SET"};
 char buffer[256];
 short length;
@@ -63,7 +63,7 @@ byte coords[9];
 byte ncoords[1];
 long sentMillis = 0;
 long currentMillis = 0;
-int iiv = 0;
+RTC_DATA_ATTR int iiv = 0;
 long interval[5] = {15000, 30000, 45000, 60000, 120000};
 char *ttext[5] = {"15s", "30s", "45s", "60s", "120s"};
 int cnt = 0;
@@ -98,7 +98,7 @@ String ssvresult = "DR ";
 
 //M5Stack
 bool dim = false;
-bool powersave = false;
+RTC_DATA_ATTR bool powersave = false;
 
 /* RootVar's for UI elements (note: not edit manually) */
 String UIInputbox_6nssds = "";        //No GWs for LCR
@@ -289,44 +289,46 @@ void initlora() {
 
   lora.init();
 
-  delay(1000);
+  if (powersave == false) {
+    delay(1000);
 
-  memset(buffer, 0, 256);
-  lora.getVersion(buffer, 256, 1);
-  Serial.print(buffer);
+    memset(buffer, 0, 256);
+    lora.getVersion(buffer, 256, 1);
+    Serial.print(buffer);
 
-  memset(buffer, 0, 256);
-  lora.getId(buffer, 256, 1);
-  Serial.print(buffer);
+    memset(buffer, 0, 256);
+    lora.getId(buffer, 256, 1);
+    Serial.print(buffer);
 
-  // void setId(char *DevAddr, char *DevEUI, char *AppEUI);
-  lora.setId("yourdeviceaddress", NULL, NULL);            //for ABP
-  //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI"); //for OTAA
+    // void setId(char *DevAddr, char *DevEUI, char *AppEUI);
+    lora.setId("yourdeviceaddress", NULL, NULL);            //for ABP
+    //lora.setId("ABP-yourdeviceaddress", "OTAA-yourdeviceEUI", "OTAA-yourAppEUI"); //for OTAA
 
-  // setKey(char *NwkSKey, char *AppSKey, char *AppKey);
-  lora.setKey("yourNetworkSKey", "yourappSKey", NULL);          //for ABP
-  //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);   //for OTAA
+    // setKey(char *NwkSKey, char *AppSKey, char *AppKey);
+    lora.setKey("yourNetworkSKey", "yourappSKey", NULL);          //for ABP
+    //lora.setKey("ABP-yourNetworkSKey", "ABP-yourappSKey", "OTAAyourAppKey);   //for OTAA
 
-  lora.setDeviceMode(LWABP);
-  lora.setDataRate(DR5, EU868);
+    lora.setDeviceMode(LWABP);
+    lora.setDataRate(DR5, EU868);
 
-  lora.setChannel(0, 868.1);
-  lora.setChannel(1, 868.3);
-  lora.setChannel(2, 868.5);
-  lora.setChannel(3, 867.1);
-  lora.setChannel(4, 867.3);
-  lora.setChannel(5, 867.5);
-  lora.setChannel(6, 867.7);
-  lora.setChannel(7, 867.9);
+    lora.setChannel(0, 868.1);
+    lora.setChannel(1, 868.3);
+    lora.setChannel(2, 868.5);
+    lora.setChannel(3, 867.1);
+    lora.setChannel(4, 867.3);
+    lora.setChannel(5, 867.5);
+    lora.setChannel(6, 867.7);
+    lora.setChannel(7, 867.9);
 
-  lora.setReceiveWindowFirst(0, 868.1);
-  lora.setReceiveWindowSecond(869.525, DR3);
+    lora.setReceiveWindowFirst(0, 868.1);
+    lora.setReceiveWindowSecond(869.525, DR3);
 
-  lora.setPower(14);
-  lora.setPort(1);
-  lora.setAdaptiveDataRate(false);
-  lora.setDutyCycle(true);
-  lora.setDeviceLowPower();
+    lora.setPower(14);
+    lora.setPort(1);
+    lora.setAdaptiveDataRate(false);
+    lora.setDutyCycle(true);
+    lora.setDeviceLowPower();
+  }
 }
 
 //Settings for LoRaWAN ABP
@@ -382,7 +384,7 @@ void sendobject() {
 #ifndef M5gps
   if (iwm == 0) {
 #else
-    if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
+  if (iwm == 0 && gps.location.isValid() == true && gps.location.age() < 2000) {
 #endif
 
     UISet(&UIInputbox_awnh87, "Sending");
@@ -443,12 +445,12 @@ void sendobject() {
     } else {
       UISet(&UIInputbox_awnh87, "Error");
     }
-    #ifndef M5gps
+#ifndef M5gps
   } else if ((iwm == 1) || (iwm == 2)) {
-    #else
-    } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
+#else
+  } else if (((iwm == 1) && gps.location.isValid() == true && gps.location.age() < 2000) || (iwm == 2)) {
 #endif
-    
+
     UISet(&UIInputbox_awnh87, "ACK");
     lora.sendDevicePing();
 
@@ -899,7 +901,12 @@ void setup() {
 #ifdef M5go
   strip.Begin();
   strip.Show();
-  strip.SetBrightness(50);
+
+  if (powersave == false) {
+    strip.SetBrightness(50);
+  } else {
+    strip.SetBrightness(0);
+  }
 
   xTaskCreatePinnedToCore(
     pixelupdate,
@@ -934,12 +941,23 @@ void setup() {
   UIDisable(true, &UITextbox_7mnuudb);
   UIDisable(false, &UIInputbox_awnh87);
 
-  #ifndef M5gps
+#ifndef M5gps
   UIDisable(true, &UITextbox_4t0l0bn);
   UIDisable(true, &UITextbox_q7sl3uo);
-  #endif
+#endif
 
   Serial.println("Started");
+
+  if (powersave == true) {
+    smartDelay(1000);
+#ifdef M5gps
+    gpsdata();
+#endif
+    sendobject();
+    esp_sleep_enable_timer_wakeup(interval[iiv] * 1000);
+    esp_deep_sleep_start();
+  }
+
 }
 
 void loop() {
@@ -1142,9 +1160,8 @@ void loop() {
 #ifdef M5go
     strip.SetBrightness(0);
 #endif
-    esp_sleep_enable_timer_wakeup(15000000);
-    esp_light_sleep_start();
-    smartDelay(1000);
+    esp_sleep_enable_timer_wakeup(interval[iiv] * 1000);
+    esp_deep_sleep_start();
   }
 
   //used to deflicker the display, more possible, but with less reactive buttons
