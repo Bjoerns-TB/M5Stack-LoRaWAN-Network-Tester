@@ -104,7 +104,7 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
 #### SET 
 #### (Settings)
 
-"SET" allows to change the transmission intervall in NACK or ACK mode. Possible settings are 15/30/45/60/120 seconds. Pressing button C will active the powersaving mode. The node will go to light sleep and wakes up every 15 seconds. Sleep mode can only be stopped by resetting the devicde (ToDo).
+"SET" allows to change the transmission intervall in NACK or ACK mode. Possible settings are 15/30/45/60/120 seconds. Pressing button C will active the powersaving mode. The node will go to deep sleep and wakes up according to the transmission intervall. Sleep mode can only be stopped by resetting the devicde.
 
 ![SET Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/set.jpg "Fig 7. SET")
 
@@ -114,6 +114,9 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
   - Periodic transmission will only work with a valid GPS fix and an GPS age below 2 seconds
   
 ## Changelog
+
+  - 13.03.2020
+    - Enable ESP32 Deep Sleep mode
 
   - 12.03.2020
     - Fix OTAA join, caused by Duty Cycle limitation
@@ -147,7 +150,7 @@ Fimrware version 2.1.19 is mandatory for OTAA to work.
 
 ## ToDo
   - create tasks for M5UI
-  - improve powersave features
+  - improve powersave features (GPS module)
 
 
 [M5Stack]: https://github.com/m5stack/M5Stack
