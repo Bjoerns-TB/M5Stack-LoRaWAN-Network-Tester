@@ -3,7 +3,7 @@
 A LoRaWAN Network Tester based on the M5Stack, compatible with TTN (The Things Network)
 
 ## Setup
-This is designed to work with the following hardware:
+The tester is designed to work with the following hardware:
   - M5Core (Basic, Gray or Fire)
   - M5Go Base (optional)
   - M5Stack GPS Module (optional)
@@ -19,7 +19,7 @@ This is designed to work with the following hardware:
  
 #### Installation and Configuration
 Upload this sketch to your M5 using the Arduino IDE. M5Stack Fire users have to disable PSRAM, because it will interfer with UART2.
-UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp The UART Port on the LoRaWAN module has to changed (solderpads) to use this ports.
+UART2 with GPIO 16 and 17 willbe used for the GPS module and UART1 with GPIO 2 and 5 for the LoRaWAN module. Last can be changed in LoRaWan.cpp The UART Port on the LoRaWAN module has to be changed (solderpads) to use this ports.
 
 Serial ports declaration
 
@@ -97,7 +97,7 @@ Pushing button B will let you cycle through each spreadfactor. By pushig button 
 #### OTAA 
 #### (OverTheAirActivation)
 "OTAA" enables the tester to perform OTAA-Joins. By selecting Join the tester will try to join the TTN Network. After an successful the the tester will start with periodic transmissions. You have the choice between transmission with or without ACK. The RSSI and SNR values of the received packet will be shown on the display. If there is no valid GPS fix, a packet can by manually send by pushing button B.
-Fimrware version 2.1.19 is mandatory for OTAA to work.
+Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
 
 ![OTAA Image](https://github.com/Bjoerns-TB/M5Stack-LoRaWAN-Network-Tester/blob/master/images/otaa.jpg "Fig 7. OTAA")
 
