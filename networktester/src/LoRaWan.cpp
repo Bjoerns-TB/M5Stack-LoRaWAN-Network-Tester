@@ -253,7 +253,7 @@ bool LoRaWanClass::transferPacket(char *buffer, unsigned char timeout)
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif    
     if(strstr(_buffer, "+MSG: Done"))return true;
     return false;
@@ -273,7 +273,7 @@ bool LoRaWanClass::transferPacket(unsigned char *buffer, int length, unsigned ch
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif
     dutycycle = false;
     if(strstr(_buffer, "+MSGHEX: No band")){
@@ -296,7 +296,7 @@ bool LoRaWanClass::transferPacketWithConfirmed(char *buffer, unsigned char timeo
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif      
     if(strstr(_buffer, "+CMSG: ACK Received"))return true;
     return false;
@@ -319,7 +319,7 @@ bool LoRaWanClass::transferPacketWithConfirmed(unsigned char *buffer, int length
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif     
     if(strstr(_buffer, "+CMSGHEX: ACK Received"))return true;
     return false;
@@ -335,7 +335,7 @@ bool LoRaWanClass::transferPacketLinkCheckReq(unsigned char timeout)
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif
     dutycycle = false;
     if(strstr(_buffer, "+MSG: No band")){
@@ -361,7 +361,7 @@ short LoRaWanClass::receivePacket(char *buffer, int length, short *rssi, float *
     ptr = strstr(_buffer, "SNR ");
     if(ptr)*snr = atof(ptr + 4);
     else *snr = -20.00;
-    Serial.println(*snr);
+    SerialUSB.println(*snr);
     
     ptr = strstr(_buffer, "RX: \"");
     if(ptr)
@@ -420,7 +420,7 @@ bool LoRaWanClass::transferProprietaryPacket(char *buffer, unsigned char timeout
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif    
     if(strstr(_buffer, "+PMSG: Done"))return true;
     return false;
@@ -443,7 +443,7 @@ bool LoRaWanClass::transferProprietaryPacket(unsigned char *buffer, unsigned cha
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif    
     if(strstr(_buffer, "+PMSGHEX: Done"))return true;
     return false;
@@ -602,7 +602,7 @@ bool LoRaWanClass::setOTAAJoin(_otaa_join_cmd_t command, unsigned char timeout)
     memset(_buffer, 0, BEFFER_LENGTH_MAX);
     readBuffer(_buffer, BEFFER_LENGTH_MAX, timeout);
 #if _DEBUG_SERIAL_    
-    Serial.print(_buffer);
+    SerialUSB.print(_buffer);
 #endif  
 
     ptr = strstr(_buffer, "+JOIN: Join failed");
@@ -762,8 +762,8 @@ short LoRaWanClass::receivePacketP2PMode(unsigned char *buffer, int length, shor
 
 void LoRaWanClass::loraDebug(void)
 {
-    if(Serial.available())SerialLoRa.write(Serial.read());
-    if(SerialLoRa.available())Serial.write(SerialLoRa.read());
+    if(SerialUSB.available())SerialLoRa.write(SerialUSB.read());
+    if(SerialLoRa.available())SerialUSB.write(SerialLoRa.read());
 }
 
 #if _DEBUG_SERIAL_
@@ -775,7 +775,7 @@ void LoRaWanClass::loraDebugPrint(unsigned char timeout)
     
     while(1)
     {
-        while(SerialLoRa.available()) Serial.write(SerialLoRa.read());  
+        while(SerialLoRa.available()) SerialUSB.write(SerialLoRa.read());  
         
         timerEnd = millis();
         if(timerEnd - timerStart > 1000 * timeout)break;
