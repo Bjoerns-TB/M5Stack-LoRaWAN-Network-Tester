@@ -1,6 +1,9 @@
 # M5Stack-LoRaWAN-Network-Tester
 
 A LoRaWAN Network Tester based on the M5Stack, compatible with TTN (The Things Network)
+This version is for the LoRaWAN module.
+
+[Version for LoRa 868 Module]
 
 ## Setup
 The tester is designed to work with the following hardware:
@@ -180,5 +183,6 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
 [NeoPixelBus]: https://github.com/Makuna/NeoPixelBus
 [M5_UI]: https://github.com/dsiberia9s/M5_UI
 [geojson.io]: http://geojson.io/
+[Version for LoRa 868 Module]: https://github.com/Bjoerns-TB/M5Stack-LoRa-868-Network-Tester
 
 
