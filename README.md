@@ -139,6 +139,9 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
   
 ## Changelog
 
+  - 30.12.2020
+    - Reset RSSI, SNR and No of GWs values on change of mode
+
   - 13.03.2020
     - Enable ESP32 Deep Sleep mode
     - Allign packet counter to TTN console
