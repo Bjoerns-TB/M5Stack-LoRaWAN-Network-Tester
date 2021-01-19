@@ -16,7 +16,7 @@ The tester is designed to work with the following hardware:
   - [M5Stack]
   - [TinyGPSPlus]
   - [NeoPixelBus]
-  - [M5_UI]
+  - [M5_UI] - this Fork enables TTN Mapper like colours for RSSI values in the progressbar
   - Seeeduino LoRaWan (Already included, patched and bugfixed)
 
  
@@ -139,6 +139,10 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
   
 ## Changelog
 
+  - 19.01.2021
+    - Add Beep to ACK Mode
+    - reset counters if no ACK received
+
   - 30.12.2020
     - Reset RSSI, SNR and No of GWs values on change of mode
 
@@ -187,5 +191,6 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
 [M5_UI]: https://github.com/dsiberia9s/M5_UI
 [geojson.io]: http://geojson.io/
 [Version for LoRa 868 Module]: https://github.com/Bjoerns-TB/M5Stack-LoRa-868-Network-Tester
+[M5_UI]: https://github.com/Bjoerns-TB/M5_UI/tree/TTN-Mapper-Colours-Progressbar
 
 
