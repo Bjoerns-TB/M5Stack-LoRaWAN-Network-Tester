@@ -491,6 +491,9 @@ void sendobject() {
       cnt++;
 
       UISet(&UIInputbox_awnh87, "ACK OK");
+      if (iwm == 1){
+        M5.Speaker.beep();
+      }
 
       short length;
       short rssi;
@@ -503,7 +506,7 @@ void sendobject() {
 
       dtostrf(snr, 5, 1, charsnr);
 
-      UISet(&UIProgressbar_eymzer, rssi + 130);
+      UISet(&UIProgressbar_eymzer, (rssi + 130) * 2);
       UISet(&UITextbox_859t1hi, rssi);
       UISet(&UITextbox_olwwlae, charsnr);
 
@@ -525,6 +528,9 @@ void sendobject() {
 
     } else {
       UISet(&UIInputbox_awnh87, "Error");
+      UISet(&UITextbox_859t1hi, "-130");
+      UISet(&UITextbox_olwwlae, "-20.0");
+      UISet(&UIProgressbar_eymzer, 0);
     }
   } else if (iwm == 3) {
 
@@ -589,7 +595,7 @@ void sendobject() {
 
       dtostrf(snr, 5, 1, charsnr);
 
-      UISet(&UIProgressbar_eymzer, rssi + 130);
+      UISet(&UIProgressbar_eymzer, (rssi + 130) * 2);
       UISet(&UITextbox_859t1hi, rssi);
       UISet(&UITextbox_olwwlae, charsnr);
       UISet(&UIInputbox_6nssds, gwcnt);
@@ -614,6 +620,10 @@ void sendobject() {
       UISet(&UIInputbox_awnh87, "DutyCycle");
     } else {
       UISet(&UIInputbox_awnh87, "Error");
+      UISet(&UITextbox_859t1hi, "-130");
+      UISet(&UITextbox_olwwlae, "-20.0");
+      UISet(&UIProgressbar_eymzer, 0);
+      UISet(&UIInputbox_6nssds, 0);
     }
   }
   lora.setDeviceLowPower();
