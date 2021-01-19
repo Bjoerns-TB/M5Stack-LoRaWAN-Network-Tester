@@ -1,7 +1,7 @@
 # M5Stack-LoRaWAN-Network-Tester
 
 A LoRaWAN Network Tester based on the M5Stack, compatible with TTN (The Things Network)
-This version is for the LoRaWAN module.
+This version is for the LoRaWAN module (EOL).
 
 [Version for LoRa 868 Module]
 
