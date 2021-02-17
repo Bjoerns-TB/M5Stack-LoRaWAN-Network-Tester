@@ -893,8 +893,8 @@ void setup() {
   serialgps.begin(9600, SERIAL_8N1, 16, 17);
 #endif
   M5.Lcd.setBrightness(50);
-  //M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)imgName);
-  M5.Lcd.drawBitmap(0, 0, 320, 240, (uint16_t *)gImage_logoM5);
+  //M5.Lcd.pushImage(0, 0, 320, 240, (uint16_t *)imgName);
+  M5.Lcd.pushImage(0, 0, 320, 240, (uint16_t *)gImage_logoM5);
   initlora();
 
 #ifdef M5gps
@@ -933,12 +933,12 @@ void setup() {
   LayerFunction_default(0);
 
 #ifdef M5gps
-  M5.Lcd.drawBitmap(5, 2, 24, 24, (uint16_t *)ICON_10_24);
-  M5.Lcd.drawBitmap(65, 5, 24, 24, (uint16_t *)ICON_23_24);
+  M5.Lcd.pushImage(5, 2, 24, 24, (uint16_t *)ICON_10_24);
+  M5.Lcd.pushImage(65, 5, 24, 24, (uint16_t *)ICON_23_24);
 #endif
 
   if (SD.exists(filename)) {
-    M5.Lcd.drawBitmap(200, 5, 24, 24, (uint16_t *)ICON_22_24);
+    M5.Lcd.pushImage(200, 5, 24, 24, (uint16_t *)ICON_22_24);
     cardin = true;
   }
 
@@ -1118,22 +1118,22 @@ void loop() {
 
   //Print GPS fix status und change NeoPixel 2
   if (gps.location.isValid() == false) {
-    M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_25_24);
+    M5.Lcd.pushImage(160, 5, 24, 24, (uint16_t *)ICON_25_24);
   }
   else if (gps.location.isValid() && gps.location.age() > 2000) {
-    M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_25_24);
+    M5.Lcd.pushImage(160, 5, 24, 24, (uint16_t *)ICON_25_24);
   }
   else if (gps.location.isValid() == true) {
-    M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_20_24);
+    M5.Lcd.pushImage(160, 5, 24, 24, (uint16_t *)ICON_20_24);
   }
   else {
-    M5.Lcd.drawBitmap(160, 5, 24, 24, (uint16_t *)ICON_20_24);
+    M5.Lcd.pushImage(160, 5, 24, 24, (uint16_t *)ICON_20_24);
   }
 #endif
 
   //Battery Status
   if (M5.Power.isCharging() == true) {
-    M5.Lcd.drawBitmap(240, 5, 24, 24, (uint16_t *)ICON_40_24);
+    M5.Lcd.pushImage(240, 5, 24, 24, (uint16_t *)ICON_40_24);
   }
 
   if (M5.Power.isChargeFull() == true) {
