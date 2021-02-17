@@ -139,6 +139,9 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
   
 ## Changelog
 
+  - 17.02.2021
+    - Replace drawBitmap by pushImage for corrected colours
+
   - 19.01.2021
     - Add Beep to ACK Mode
     - reset counters if no ACK received
