@@ -9,7 +9,7 @@ This version is for the LoRaWAN module (EOL).
 The tester is designed to work with the following hardware:
   - M5Core (Basic, Gray or Fire)
   - M5Go Base (optional)
-  - M5Stack GPS Module (optional)
+  - M5Stack GPS Module or Mini GPS/BDS Unit (optional)
   - M5Stack LoRaWAN Module (Firmware 2.1.19 mandatory for OTAA)
 
 #### Required Libraries!
