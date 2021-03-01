@@ -5,6 +5,8 @@ This version is for the LoRaWAN module (EOL).
 
 [Version for LoRa 868 Module]
 
+[Version for COM.LoRaWAN Module]
+
 ## Setup
 The tester is designed to work with the following hardware:
   - M5Core (Basic, Gray or Fire)
@@ -195,5 +197,5 @@ Firmware version 2.1.19 of the LoRaWAN module is mandatory for OTAA to work.
 [geojson.io]: http://geojson.io/
 [Version for LoRa 868 Module]: https://github.com/Bjoerns-TB/M5Stack-LoRa-868-Network-Tester
 [M5_UI]: https://github.com/Bjoerns-TB/M5_UI/tree/TTN-Mapper-Colours-Progressbar
-
+[Version for COM.LoRaWAN Module]: https://github.com/Bjoerns-TB/M5Stack-COM-LoRaWAN-Network-Tester
 
